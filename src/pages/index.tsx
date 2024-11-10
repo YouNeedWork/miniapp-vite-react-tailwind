@@ -1,7 +1,84 @@
-import React from "react";
+import { Args, normalizeTypeArgsToStr, RoochClient, Transaction } from "@roochnetwork/rooch-sdk";
+import { useCreateSessionKey, useCurrentAddress, useCurrentSession } from "@roochnetwork/rooch-sdk-kit";
+import React, { useState } from "react";
+import { GOLD_TREATURY, PKG } from "../constant/config";
 
 
 export default function Index() {
+    const sessionKey = useCurrentSession()
+    const address = useCurrentAddress()
+
+    const { mutateAsync: createSessionKey } = useCreateSessionKey();
+
+    const handleSubmit = async () => {
+        try {
+
+            if (!sessionKey) {
+                try {
+                    await createSessionKey({
+                        appName: 'rooch',
+                        appUrl: window.location.href,
+                        scopes: [
+                            '0x1::*::*',
+                            '0x3::*::*',
+                            `${PKG}::*::*`
+                        ],
+                        maxInactiveInterval: 60 * 60 * 8,
+                    })
+                } catch (e: any) {
+                }
+            }
+
+            // Find object type in address
+            const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+            // get object owner by address
+            const objects = await client.queryObjectStates({
+                filter: {
+                    owner: address!.toStr(),
+                    //owner: "0x47cfccc41f9506fcbfead991a8fc28641714d58f241a50b8f1d995537f73d8bb",
+                    //object_type:  "0x2::account::Account",
+                    //object_type: `${PKG}::gold_miner::MineInfo`,
+                    //object_type: "0x2::account::Account",
+                },
+                cursor: null,
+                queryOption: {
+                    decode: true,
+                    descending: false,
+                },
+            });
+
+            let minerObject = objects.data.find((item) => item.object_type === `${PKG}::gold_miner::MineInfo`)
+            console.log("Address objects:", objects);
+
+            const txn = new Transaction();
+            txn.callFunction({
+                address: PKG,
+                module: "gold_miner",
+                function: "mine",
+                args: [
+                    Args.objectId(GOLD_TREATURY),
+                    Args.objectId(minerObject!.id),
+                    //Args.objectId("0x98bbd9a0fc280ffadef7a7882107e749cba01098ebff0a6b481c4584a91605af"),
+                ],
+                typeArgs: [
+                ],
+            });
+            console.log("执行交易", sessionKey)
+            console.log("执行交易", txn)
+
+            console.log("执行交易", client)
+            const result = await client.signAndExecuteTransaction({
+                transaction: txn,
+                signer: sessionKey as any,
+            })
+
+            if (result.execution_info.status.type === 'executed') {
+                //message.success(`Executed:${result.execution_info.tx_hash}`)
+            }
+        } catch (e: any) {
+            console.log(e)
+        }
+    }
 
     return <>
         <div className="flex flex-col justify-center items-center p-4 min-h-screen bg-gray-100">
@@ -13,7 +90,7 @@ export default function Index() {
                 </div>
                 <div
                     className="relative w-full h-48 cursor-pointer"
-                    onClick={() => console.log("Tap!")}
+                    onClick={() => handleSubmit()}
                 >
                     <div className="flex absolute inset-0 justify-center items-center">
                         <div className="animate-bounce">
