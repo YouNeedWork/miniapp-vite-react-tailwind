@@ -2,18 +2,34 @@ import { Args, normalizeTypeArgsToStr, RoochClient, Transaction } from "@roochne
 import { useCreateSessionKey, useCurrentAddress, useCurrentSession } from "@roochnetwork/rooch-sdk-kit";
 import React, { useState } from "react";
 import { GOLD_TREATURY, PKG } from "../constant/config";
+import { useQuery } from "@tanstack/react-query";
 
 
 export default function Index() {
+    const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
     const sessionKey = useCurrentSession()
     const address = useCurrentAddress()
 
     const { mutateAsync: createSessionKey } = useCreateSessionKey();
 
+    const { data: goldBalance, isLoading: goldBalanceLoading, isError: goldBalanceError, refetch: refetchGoldBalance } = useQuery({
+        queryKey: ['goldBalance', address],
+        queryFn: async () => {
+            if (!address) return 0;
+            const objects = await client.getBalance({
+                coinType: `${PKG}::gold::Gold`,
+                owner: address.genRoochAddress().toStr(),
+            });
+            return objects.balance ? Number(objects.balance || 0) / 1e6 : 0;
+        },
+        enabled: address !== undefined
+    });
+
     const handleSubmit = async () => {
         try {
+            if (address === undefined) return;
 
-            if (!sessionKey) {
+            if (sessionKey === null) {
                 try {
                     await createSessionKey({
                         appName: 'rooch',
@@ -29,26 +45,19 @@ export default function Index() {
                 }
             }
 
-            // Find object type in address
-            const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+
             // get object owner by address
             const objects = await client.queryObjectStates({
                 filter: {
-                    owner: address!.toStr(),
-                    //owner: "0x47cfccc41f9506fcbfead991a8fc28641714d58f241a50b8f1d995537f73d8bb",
-                    //object_type:  "0x2::account::Account",
-                    //object_type: `${PKG}::gold_miner::MineInfo`,
-                    //object_type: "0x2::account::Account",
-                },
-                cursor: null,
-                queryOption: {
-                    decode: true,
-                    descending: false,
-                },
+                    object_type_with_owner: {
+                        owner: address!.toStr(),
+                        object_type: `${PKG}::gold_miner::MineInfo`
+                    },
+                }
             });
 
             let minerObject = objects.data.find((item) => item.object_type === `${PKG}::gold_miner::MineInfo`)
-            console.log("Address objects:", objects);
+            console.log("Address objects:", minerObject);
 
             const txn = new Transaction();
             txn.callFunction({
@@ -72,7 +81,9 @@ export default function Index() {
                 signer: sessionKey as any,
             })
 
+            console.log("执行交易", result)
             if (result.execution_info.status.type === 'executed') {
+                await refetchGoldBalance();
                 //message.success(`Executed:${result.execution_info.tx_hash}`)
             }
         } catch (e: any) {
@@ -80,13 +91,21 @@ export default function Index() {
         }
     }
 
+    /*
+    if (goldBalanceLoading) {
+        return <div>Loading...</div>
+    } else if (goldBalanceError) {
+        return <div>Error: {goldBalanceError}</div>
+    }
+        */
+
     return <>
         <div className="flex flex-col justify-center items-center p-4 min-h-screen bg-gray-100">
             <h1 className="mb-8 text-3xl font-bold">Tap to Earn</h1>
             <div className="p-6 w-full max-w-sm bg-white rounded-lg shadow-lg">
                 <div className="mb-6 text-center">
                     <p className="mb-2 text-xl font-semibold">Your Balance</p>
-                    <p className="text-3xl font-bold text-green-600">0.00 USDT</p>
+                    <p className="text-3xl font-bold text-green-600">{goldBalance} GOLD</p>
                 </div>
                 <div
                     className="relative w-full h-48 cursor-pointer"
