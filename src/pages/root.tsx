@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Wallet from "../components/Wallet";
 
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import Inviter from "../components/Inveter";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ export default function Root() {
         <QueryClientProvider client={queryClient}>
             <TonConnectUIProvider manifestUrl={`${window.location.origin}/tonconnect-manifest.json`}>
                 <RoochDappProvider>
+                    <Inviter />
                     <Wallet />
                     <Outlet />
                 </RoochDappProvider>
