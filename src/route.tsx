@@ -1,6 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Index from "./pages";
+//import Index from "./pages";
+import Home from "./pages/home";
 import Root from "./pages/root";
 import NotFound from "./pages/notfound";
 
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Index />,
+        element: <Home />,
       },
     ],
   },
