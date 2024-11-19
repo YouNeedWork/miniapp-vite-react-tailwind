@@ -1,27 +1,60 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-//import Index from "./pages";
 import Home from "./pages/home";
 import Root from "./pages/root";
 import NotFound from "./pages/notfound";
-
+import { lazy } from "react";
+import LazyLoader from "./components/lazyLoader"
+const EarnView = lazy(() => import('./pages/earn'));
+const MintView = lazy(() => import('./pages/mint'));
+const FriendsView = lazy(() => import('./pages/friends'));
+const MeView = lazy(() => import('./pages/me'));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <NotFound />,
     children: [
       {
         index: true,
         element: <Home />,
       },
+      {
+        path: "/earn",
+        element: (
+          <LazyLoader>
+            <EarnView />
+          </LazyLoader>
+        ),
+      },
+      {
+        path: "/mint",
+        element: (
+          <LazyLoader>
+            <MintView />
+          </LazyLoader>
+        ),
+      },
+      {
+        path: "/friends",
+        element: (
+          <LazyLoader>
+            <FriendsView />
+          </LazyLoader>
+        ),
+      },
+      {
+        path: "/me",
+        element: (
+          <LazyLoader>
+            <MeView />
+          </LazyLoader>
+        ),
+      },
     ],
   },
 ]);
 
-//export default router;
 export default function CustomRouter() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
-
