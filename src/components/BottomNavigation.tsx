@@ -1,34 +1,53 @@
 import React from "react";
-import { Wallet2, Pickaxe, Users, User } from "lucide-react";
-import { Link, useLocation } from "react-router-dom"; // 导入 useLocation
+import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate
+import { Wallet2, Pickaxe, Users, User } from "lucide-react"; // Import icons
 
 export default function BottomNavigation() {
-  const location = useLocation(); // 获取当前路径
+  const location = useLocation(); // Get the current pathname
+  const navigate = useNavigate(); // Get the navigate function
 
   const navList = [
-    { icon: <Wallet2 className="w-6 h-6" />, label: "Earn", path: "/earn" },
-    { icon: <Pickaxe className="w-6 h-6" />, label: "Mine", path: "/mint" },
-    { icon: <Users className="w-6 h-6" />, label: "Friends", path: "/friends" },
-    { icon: <User className="w-6 h-6" />, label: "Me", path: "/me" },
+    { icon: '/src/assets/imgs/earn.png', label: "Earn", path: "/earn" },
+    { icon: '/src/assets/imgs/mint.png', label: "Mine", path: "/mint" },
+    { icon: '/src/assets/imgs/friends.png', label: "Friends", path: "/friends" },
+    { icon: '/src/assets/imgs/me.png', label: "Me", path: "/me" },
   ];
 
+  // Function to handle navigation on tab click
+  const handleTabClick = (path) => {
+    navigate(path); // Navigate to the corresponding path
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white">
-      <div className="flex justify-around py-4">
-        {navList.map((item) => (
-          <Link to={item.path} key={item.label}>
+    <div className="fixed bottom-0 left-0 right-0 h-[75px] w-full bg-[#6db3e1] rounded-tl-[10px] rounded-tr-[10px] border border-black">
+      <div className="flex justify-around gap-1 py-4">
+        {
+          navList.map((item) => (
             <div
-              className={`flex flex-col items-center ${
-                location.pathname === item.path
-                  ? "text-[#FF6B6B]" // 高亮颜色
-                  : "text-gray-500" // 非高亮颜色
-              }`}
+              key={item.path} // Add a unique key for each item
+              onClick={() => handleTabClick(item.path)} // Handle tab click
+              className={`
+                flex flex-col justify-center items-center h-[45px] border-t rounded-[5px] shadow border-[3px] border-black
+                ${
+                  location.pathname === item.path
+                    ? "w-1/4 bg-[#e2a9d7]" // Highlight color for the selected tab
+                    : "bg-[#ade2f8] w-1/5" // Non-highlight color
+                }
+                transition-all duration-300 ease-in-out
+              `}
             >
-              {item.icon}
-              <span className="mt-1 text-xs">{item.label}</span>
+              <img
+                alt=""
+                className={`
+                  origin-top-left mt-[-10px]
+                  ${location.pathname === item.path ? 'w-[49.22px] h-[50.02px] mt-[-22px]' : "mt-[-10px] w-[29.11px] h-[30.18px]"}
+                `}
+                src={item.icon}
+              />
+              <div className="text-[13px] font-black font-['Poppins'] text-white">{item.label}</div>
             </div>
-          </Link>
-        ))}
+          ))
+        }
       </div>
     </div>
   );
