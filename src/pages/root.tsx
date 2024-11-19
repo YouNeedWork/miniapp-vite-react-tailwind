@@ -4,7 +4,7 @@ import { TelegramProvider, useTelegram } from "../hooks/useTelegram";
 import RoochDappProvider from "../hooks/useRooch";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Wallet from "../components/Wallet";
-
+import BottomNavigation from "../components/BottomNavigation";
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import Inviter from "../components/Inveter";
 
@@ -16,9 +16,10 @@ export default function Root() {
         <QueryClientProvider client={queryClient}>
             <TonConnectUIProvider manifestUrl={`${window.location.origin}/tonconnect-manifest.json`}>
                 <RoochDappProvider>
-                    <Inviter />
-                    <Wallet />
+                    {/* <Inviter /> */}
+                    {/* <Wallet /> */}
                     <Outlet />
+                    <BottomNavigation/>
                 </RoochDappProvider>
             </TonConnectUIProvider>
         </QueryClientProvider>
