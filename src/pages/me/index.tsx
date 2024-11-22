@@ -3,11 +3,11 @@ import React from "react";
 export default function MintVew() {
   return (
     <div
-      className="w-screen h-screen bg-center bg-no-repeat bg-contain pt-[60px] relative"
+      className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
       style={{ backgroundImage: "url('/src/assets/imgs/mint/bg.png')" }}
     >
       <div
-        className=" w-full h-[90px] bg-center bg-no-repeat bg-contain  flex items-center justify-center gap-2"
+        className=" w-full h-[90px] bg-center bg-no-repeat  bg-cover  flex items-center justify-center gap-2"
         style={{ backgroundImage: "url('/src/assets/imgs/mint/title_bg.png')" }}
       >
         <img className="w-[42px] h-[42px]" src="/src/assets/imgs/g_icon.png" />

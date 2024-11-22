@@ -15,12 +15,12 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
+      // {
+      //   index: true,
+      //   element: <Home />,
+      // },
       {
         index: true,
-        element: <Home />,
-      },
-      {
-        path: "/earn",
         element: (
           <LazyLoader>
             <EarnView />

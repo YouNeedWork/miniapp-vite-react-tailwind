@@ -3,7 +3,7 @@ import React from "react";
 export default function MintVew() {
   return (
     <div
-      className="w-screen h-screen bg-center bg-no-repeat bg-contain pt-[60px] relative"
+      className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
       style={{ backgroundImage: "url('/src/assets/imgs/friend/bg.png')" }}
     >
       <div className="flex items-center justify-between mx-[20px]">

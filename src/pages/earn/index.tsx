@@ -3,7 +3,7 @@ import React from "react";
 export default function EarnView() {
   return (
     <div
-      className="w-screen h-screen bg-center bg-no-repeat bg-contain pt-[60px]"
+      className="w-screen h-screen bg-center bg-no-repeat pt-[60px] bg-cover"
       style={{ backgroundImage: "url('/src/assets/imgs/earnBg.png')" }}
     >
       <img className="w-full " src="/src/assets/imgs/earn_title.png" />

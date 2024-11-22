@@ -7,7 +7,7 @@ export default function BottomNavigation() {
   const navigate = useNavigate(); // Get the navigate function
 
   const navList = [
-    { icon: '/src/assets/imgs/earn.png', label: "Earn", path: "/earn" },
+    { icon: '/src/assets/imgs/earn.png', label: "Earn", path: "/" },
     { icon: '/src/assets/imgs/mint.png', label: "Mine", path: "/mint" },
     { icon: '/src/assets/imgs/friends.png', label: "Friends", path: "/friends" },
     { icon: '/src/assets/imgs/me.png', label: "Me", path: "/me" },
