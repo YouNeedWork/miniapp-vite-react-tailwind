@@ -7,10 +7,10 @@ export default function BottomNavigation() {
   const navigate = useNavigate(); // Get the navigate function
 
   const navList = [
-    { icon: '/src/assets/imgs/earn.png', label: "Earn", path: "/" },
-    { icon: '/src/assets/imgs/mint.png', label: "Mine", path: "/mint" },
-    { icon: '/src/assets/imgs/friends.png', label: "Friends", path: "/friends" },
-    { icon: '/src/assets/imgs/me.png', label: "Me", path: "/me" },
+    { icon: '/imgs/earn.png', label: "Earn", path: "/" },
+    { icon: '/imgs/mint.png', label: "Mine", path: "/mint" },
+    { icon: '/imgs/friends.png', label: "Friends", path: "/friends" },
+    { icon: '/imgs/me.png', label: "Me", path: "/me" },
   ];
 
   // Function to handle navigation on tab click
@@ -20,7 +20,7 @@ export default function BottomNavigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-[75px] w-full bg-[#6db3e1] rounded-tl-[10px] rounded-tr-[10px] border border-black">
-      <div className="flex justify-around gap-1 py-4">
+      <div className="flex gap-1 justify-around py-4">
         {
           navList.map((item) => (
             <div
@@ -28,10 +28,9 @@ export default function BottomNavigation() {
               onClick={() => handleTabClick(item.path)} // Handle tab click
               className={`
                 flex flex-col justify-center items-center h-[45px] border-t rounded-[5px] shadow border-[3px] border-black
-                ${
-                  location.pathname === item.path
-                    ? "w-1/4 bg-[#e2a9d7]" // Highlight color for the selected tab
-                    : "bg-[#ade2f8] w-1/5" // Non-highlight color
+                ${location.pathname === item.path
+                  ? "w-1/4 bg-[#e2a9d7]" // Highlight color for the selected tab
+                  : "bg-[#ade2f8] w-1/5" // Non-highlight color
                 }
                 transition-all duration-300 ease-in-out
               `}

@@ -4,16 +4,16 @@ export default function EarnView() {
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat pt-[60px] bg-cover"
-      style={{ backgroundImage: "url('/src/assets/imgs/earnBg.png')" }}
+      style={{ backgroundImage: "url('/imgs/earnBg.png')" }}
     >
-      <img className="w-full " src="/src/assets/imgs/earn_title.png" />
+      <img className="w-full" src="/imgs/earn_title.png" />
       <div className="px-[10px] w-full">
         <div className="flex items-center justify-center mt-[-20px]">
           <img
             className="w-[153px] h-[130px] origin-top-left"
-            src="/src/assets/imgs/earnHeader.png"
+            src="/imgs/earnHeader.png"
           />
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <div className="w-[184px] text-white text-lg font-black font-['Poppins'] leading-normal">
               Complete the Task, Earn Rewards!
             </div>
@@ -31,7 +31,7 @@ export default function EarnView() {
                   <div className="w-[47px] h-[47px] left-0 top-0 absolute bg-[#afe1fa] rounded-full shadow border border-black"></div>
                   <img
                     className="w-[34px] h-[34px] left-[7px] top-[7px] absolute rounded-[11px]"
-                    src="/src/assets/imgs/task_1.png"
+                    src="/imgs/task_1.png"
                   />
                 </div>
               </div>
@@ -43,7 +43,7 @@ export default function EarnView() {
                   <div className="h-[21px] left-0 top-0 absolute justify-start items-center gap-[5px] inline-flex">
                     <img
                       className="w-[19px] h-[19px]"
-                      src="/src/assets/imgs/g_icon.png"
+                      src="/imgs/g_icon.png"
                     />
                     <div className="text-center text-[#999de4] text-sm font-medium font-['Poppins']">
                       +1000
@@ -63,7 +63,7 @@ export default function EarnView() {
                   <div className="w-[47px] h-[47px] left-0 top-0 absolute bg-[#db433e] rounded-full shadow border border-black"></div>
                   <img
                     className="w-[34px] h-[34px] left-[7px] top-[7px] absolute rounded-[11px]"
-                   src="/src/assets/imgs/task_2.png"
+                    src="/imgs/task_2.png"
                   />
                 </div>
               </div>
@@ -77,7 +77,7 @@ export default function EarnView() {
                 <div className="self-stretch justify-start items-center gap-[5px] inline-flex">
                   <img
                     className="w-[19px] h-[19px]"
-                     src="/src/assets/imgs/g_icon.png"
+                    src="/imgs/g_icon.png"
                   />
                   <div className="text-center text-[#999de4] text-sm font-medium font-['Poppins']">
                     +1000
@@ -96,7 +96,7 @@ export default function EarnView() {
                   <div className="w-[47px] h-[47px] left-0 top-0 absolute bg-[#90ba57] rounded-full shadow border border-black"></div>
                   <img
                     className="w-[34px] h-[34px] left-[7px] top-[7px] absolute rounded-[11px]"
-                     src="/src/assets/imgs/task_3.png"
+                    src="/imgs/task_3.png"
                   />
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function EarnView() {
                 <div className="self-stretch justify-start items-center gap-[5px] inline-flex">
                   <img
                     className="w-[19px] h-[19px]"
-                     src="/src/assets/imgs/g_icon.png"
+                    src="/imgs/g_icon.png"
                   />
                   <div className="text-center text-[#999de4] text-sm font-medium font-['Poppins']">
                     +3000
@@ -129,7 +129,7 @@ export default function EarnView() {
                   <div className="w-[47px] h-[47px] left-0 top-0 absolute bg-[#edad4b] rounded-full shadow border border-black"></div>
                   <img
                     className="w-[34px] h-[34px] left-[7px] top-[7px] absolute rounded-[11px]"
-                     src="/src/assets/imgs/task_4.png"
+                    src="/imgs/task_4.png"
                   />
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function EarnView() {
                 <div className="self-stretch justify-start items-center gap-[5px] inline-flex">
                   <img
                     className="w-[19px] h-[19px]"
-                     src="/src/assets/imgs/g_icon.png"
+                    src="/imgs/g_icon.png"
                   />
                   <div className="text-center text-[#999de4] text-sm font-medium font-['Poppins']">
                     +5000
@@ -162,7 +162,7 @@ export default function EarnView() {
                   <div className="w-[47px] h-[47px] left-0 top-0 absolute bg-[#e1a8d9] rounded-full shadow border border-black"></div>
                   <img
                     className="w-[34px] h-[34px] left-[7px] top-[7px] absolute rounded-[11px]"
-                     src="/src/assets/imgs/task_5.png"
+                    src="/imgs/task_5.png"
                   />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function EarnView() {
                 <div className="self-stretch justify-start items-center gap-[5px] inline-flex">
                   <img
                     className="w-[19px] h-[19px]"
-                     src="/src/assets/imgs/g_icon.png"
+                    src="/imgs/g_icon.png"
                   />
                   <div className="text-center text-[#999de4] text-sm font-medium font-['Poppins']">
                     +10000

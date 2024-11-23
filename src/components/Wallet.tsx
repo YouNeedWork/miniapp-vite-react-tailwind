@@ -4,11 +4,14 @@ import RoochWallet from "./RoochWallet";
 import TonWallet from "./TonWallet";
 
 export default function Wallet() {
-    const { ready } = useTelegram();
+    //const { ready } = useTelegram();
 
+
+    /*
     if (ready) {
         return <TonWallet />;
     }
+    */
 
     return <RoochWallet />;
 }

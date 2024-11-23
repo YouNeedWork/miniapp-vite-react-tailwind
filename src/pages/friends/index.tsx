@@ -4,7 +4,7 @@ export default function MintVew() {
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
-      style={{ backgroundImage: "url('/src/assets/imgs/friend/bg.png')" }}
+      style={{ backgroundImage: "url('/imgs/friend/bg.png')" }}
     >
       <div className="flex items-center justify-between mx-[20px]">
         <div className="text-white text-3xl font-black font-['Poppins'] uppercase">
@@ -15,7 +15,7 @@ export default function MintVew() {
             friends
           </div>
           <img
-            src="/src/assets/imgs/friend/arrow-right.png"
+            src="/imgs/friend/arrow-right.png"
             className="w-[16px] h-[17px]"
             alt=""
           />
@@ -35,10 +35,10 @@ export default function MintVew() {
         <div
           className="w-[277px] h-[102px] shadow  flex items-center  justify-center  bg-center bg-no-repeat bg-contain"
           style={{
-            backgroundImage: "url('/src/assets/imgs/friend/message_bg.png')",
+            backgroundImage: "url('/imgs/friend/message_bg.png')",
           }}
         >
-          <div className="text-center ">
+          <div className="text-center">
             <span className="text-black text-sm font-medium font-['Poppins']">
               For every friend that plays, <br />
               you both Get

@@ -4,13 +4,13 @@ export default function MintVew() {
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
-      style={{ backgroundImage: "url('/src/assets/imgs/mint/bg.png')" }}
+      style={{ backgroundImage: "url('/imgs/mint/bg.png')" }}
     >
       <div
         className=" w-full h-[90px] bg-center bg-no-repeat  bg-cover  flex items-center justify-center gap-2"
-        style={{ backgroundImage: "url('/src/assets/imgs/mint/title_bg.png')" }}
+        style={{ backgroundImage: "url('/imgs/mint/title_bg.png')" }}
       >
-        <img className="w-[42px] h-[42px]" src="/src/assets/imgs/g_icon.png" />
+        <img className="w-[42px] h-[42px]" src="/imgs/g_icon.png" />
         <div className="flex flex-col items-start">
           <div className="text-black text-xs font-bold font-['Poppins']">
             Total assets
@@ -21,9 +21,9 @@ export default function MintVew() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col justify-center items-center">
         <img
-          src="/src/assets/imgs/me/avator.png"
+          src="/imgs/me/avator.png"
           className="w-[65px] h-[65px]"
           alt=""
         />
@@ -36,10 +36,10 @@ export default function MintVew() {
       </div>
 
       <div className=" flex flex-col gap-8  absolute bottom-[70px]  w-screen h-[491px] bg-[#fdeeba] rounded-[20px] border border-black px-[20px] pt-[32px]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
             <img
-              src="/src/assets/imgs/me/wallet_icon.png"
+              src="/imgs/me/wallet_icon.png"
               className="w-[47px] h-[47px]"
               alt=""
             />
@@ -48,15 +48,15 @@ export default function MintVew() {
             </div>
           </div>
           <img
-            src="/src/assets/imgs/me/arrow-right.png"
+            src="/imgs/me/arrow-right.png"
             className="w-[20px] h-[18px]"
             alt=""
           />
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
             <img
-              src="/src/assets/imgs/me/my_orders.png"
+              src="/imgs/me/my_orders.png"
               className="w-[47px] h-[47px]"
               alt=""
             />
@@ -65,15 +65,15 @@ export default function MintVew() {
             </div>
           </div>
           <img
-            src="/src/assets/imgs/me/arrow-right.png"
+            src="/imgs/me/arrow-right.png"
             className="w-[20px] h-[18px]"
             alt=""
           />
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
             <img
-              src="/src/assets/imgs/me/account.png"
+              src="/imgs/me/account.png"
               className="w-[47px] h-[47px]"
               alt=""
             />
@@ -82,15 +82,15 @@ export default function MintVew() {
             </div>
           </div>
           <img
-            src="/src/assets/imgs/me/arrow-right.png"
+            src="/imgs/me/arrow-right.png"
             className="w-[20px] h-[18px]"
             alt=""
           />
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
             <img
-              src="/src/assets/imgs/me/lang.png"
+              src="/imgs/me/lang.png"
               className="w-[47px] h-[47px]"
               alt=""
             />
@@ -99,7 +99,7 @@ export default function MintVew() {
             </div>
           </div>
           <img
-            src="/src/assets/imgs/me/arrow-right.png"
+            src="/imgs/me/arrow-right.png"
             className="w-[20px] h-[18px]"
             alt=""
           />
