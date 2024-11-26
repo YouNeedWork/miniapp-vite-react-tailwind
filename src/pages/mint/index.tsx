@@ -55,12 +55,12 @@ export default function MintVew() {
         module: "gold_miner",
         function: "get_hunger_through_times",
         args: [
-          Args.address(address!.genRoochAddress().toStr())
+          Args.address(address!)
         ],
         typeArgs: [],
       });
       console.log(result);
-      return result.return_values;
+      return result.return_values === undefined ? 0 : result.return_values![0].decoded_value;
     },
     enabled: address !== undefined
   });
@@ -90,8 +90,10 @@ export default function MintVew() {
       // Check if user has a MineInfo object
       const objects = await client.getStates({
         accessPath: `/resource/${address!.genRoochAddress().toHexAddress()}/${PKG}::gold_miner::MineInfo`,
+        stateOption: { decode: true }
       });
-      //console.log("objects", objects)
+
+      console.log("objects", objects)
 
       // If no MineInfo found, this is first time - call start function
       if (objects.length === 0) {
@@ -140,10 +142,10 @@ export default function MintVew() {
         console.log(hunger);
         console.log("执行交易", result)
         if (result.execution_info.status.type === 'executed') {
-
           await Promise.all([
             refetchGoldBalance(),
             refetchRgasBalance(),
+            refetchHunger(),
           ])
         }
       }
@@ -182,7 +184,7 @@ export default function MintVew() {
             <div className="w-[7.75px] h-[7.75px] left-[5.36px] top-[16.09px] absolute bg-[#db433e] rounded-full border border-black"></div>
           </div>
           <div className="text-[#edad4b] text-3xl font-black font-['Poppins'] uppercase">
-            {RgasBalance}
+            {String(RgasBalance)} - {String(hunger)}
           </div>
         </div>
       </div>
@@ -247,7 +249,7 @@ const Icons = ({ mine }: { mine: () => void }) => {
 
         <div className="h-[13px] px-1 py-[3px] left-[35px] top-0 absolute bg-[#67d488] rounded-lg border justify-center items-center gap-2.5 inline-flex">
           <div className="text-center text-white text-[9.76px] font-normal font-['Santral-ExtraBold'] capitalize">
-            3
+            1
           </div>
         </div>
       </div>
