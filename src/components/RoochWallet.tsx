@@ -51,14 +51,16 @@ export default function RoochWallet() {
                     setWalletConnectModal(false);
                 }}
             ></WalletConnectModal>
-            <div
+         <div className="flex items-center justify-center ">
+         <div
                 onClick={handleConnect}
                 className={
-                    "pc:px-[10px] pc:w-[180px] w-auto  text-center py-[5px] rounded  ml-[10px]  pc:ml-[30px] cursor-pointer bg-[#00ADB2] dark:text-white"
+                    "pc:px-[10px] pc:w-[180px]  w-1/2   text-center py-[5px] rounded  ml-[10px]  pc:ml-[30px] cursor-pointer bg-[#00ADB2] dark:text-white"
                 }
             >
                 {"Connect Wallet"}
             </div>
+         </div>
         </>
         );
     };
