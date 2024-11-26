@@ -98,8 +98,6 @@ export default function MintVew() {
         let inviter = localStorage.getItem("inviter");
         const txn = new Transaction();
 
-
-
         txn.callFunction({
           address: PKG,
           module: "gold_miner",
@@ -139,10 +137,14 @@ export default function MintVew() {
           signer: sessionKey as any,
         })
 
+        console.log(hunger);
         console.log("执行交易", result)
         if (result.execution_info.status.type === 'executed') {
-          await refetchGoldBalance();
-          await refetchRgasBalance();
+
+          await Promise.all([
+            refetchGoldBalance(),
+            refetchRgasBalance(),
+          ])
         }
       }
 
