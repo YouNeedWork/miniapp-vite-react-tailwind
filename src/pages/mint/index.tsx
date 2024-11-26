@@ -9,6 +9,8 @@ import { PKG } from "../../constant/config";
 import { Transaction, ExecuteViewFunctionParams } from "@roochnetwork/rooch-sdk";
 
 import { ShoppingBag } from "lucide-react";
+import { Bitcoin } from "lucide-react";
+import { Gem } from "lucide-react";
 
 export default function MintVew() {
   const client = new RoochClient({ url: "https://test-seed.rooch.network/" });

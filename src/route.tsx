@@ -22,16 +22,15 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <LazyLoader>
-            <EarnView />
+          <LazyLoader><MintView />
           </LazyLoader>
         ),
       },
       {
-        path: "/mint",
+        path: "/earn",
         element: (
           <LazyLoader>
-            <MintView />
+            <EarnView />
           </LazyLoader>
         ),
       },
