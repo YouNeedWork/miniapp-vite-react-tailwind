@@ -13,12 +13,12 @@ interface ActionsProps {
   onRefresh?: () => void;
 }
 
-export const Actions: React.FC<ActionsProps> = ({ 
-  mine, 
+export const Actions: React.FC<ActionsProps> = ({
+  mine,
   hunger,
   onOpenBackpack,
   onOpenShop,
-  onRefresh 
+  onRefresh
 }) => {
   const { isAnimating, playMiningEffect } = useMiningEffects();
 
@@ -28,7 +28,7 @@ export const Actions: React.FC<ActionsProps> = ({
       const success = await mine();
       if (!success) {
         // Handle mining failure
-        
+
       }
       // Refresh data after mining
       onRefresh?.();
@@ -38,21 +38,21 @@ export const Actions: React.FC<ActionsProps> = ({
   };
 
   return (
-    <div className="fixed bottom-[80px] inset-x-0 px-4">
-      <div className="flex relative justify-between items-center mx-auto max-w-md">
+    <div className="fixed bottom-[80px] inset-x-0 px-4 md:bottom-[120px] md:px-6 lg:bottom-[160px] lg:px-8">
+      <div className="flex relative justify-between items-center mx-auto max-w-md md:max-w-2xl lg:max-w-4xl">
         {/* Backpack Button */}
-        <button 
+        <button
           onClick={onOpenBackpack}
           className={cn(
             buttonStyles.secondary,
-            "p-2"
+            "w-[60px] h-[60px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px]"
           )}
           aria-label="Open Backpack"
         >
-          <img 
-            src="/imgs/me/my_orders.png"
+          <img
+            src="/imgs/mint/bag.png"
             alt="Backpack"
-            className="object-contain w-full h-full"
+            className="object-contain w-[40px] h-[40px] md:w-[55px] md:h-[55px] lg:w-[70px] lg:h-[70px]"
           />
         </button>
 
@@ -60,25 +60,31 @@ export const Actions: React.FC<ActionsProps> = ({
         <div className="relative">
           <button
             onClick={handleMineClick}
-            className={buttonStyles.mining}
+            className={cn(
+              buttonStyles.mining,
+              "w-[80px] h-[80px] md:w-[120px] md:h-[120px] lg:w-[160px] lg:h-[160px]"
+            )}
           >
             <img
               src="/imgs/mint/mint_icon_1.png"
               alt="Mine"
               className={cn(
-                "w-[50px] h-[50px]",
+                "w-[50px] h-[50px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px]",
                 "transition-transform duration-200",
                 isAnimating && "animate-bounce"
               )}
             />
-            <MiningAnimation 
+            <MiningAnimation
               isActive={isAnimating}
               className="absolute inset-0"
             />
           </button>
-          
+
           {/* Hunger Indicator */}
-          <div className={buttonStyles.hunger}>
+          <div className={cn(
+            buttonStyles.hunger,
+            "text-sm md:text-base lg:text-lg"
+          )}>
             {hunger}
           </div>
         </div>
@@ -88,11 +94,12 @@ export const Actions: React.FC<ActionsProps> = ({
           onClick={onOpenShop}
           className={cn(
             buttonStyles.secondary,
-            "bg-gradient-to-b from-[#e2a9d7] to-[#d182c0]"
+            "bg-gradient-to-b from-[#e2a9d7] to-[#d182c0]",
+            "w-[60px] h-[60px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px]"
           )}
           aria-label="Open Shop"
         >
-          <ShoppingCart className="w-6 h-6 text-black" />
+          <ShoppingCart className="w-[40px] h-[40px] md:w-[55px] md:h-[55px] lg:w-[70px] lg:h-[70px] text-black" />
         </button>
       </div>
     </div>

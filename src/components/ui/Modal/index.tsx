@@ -42,10 +42,9 @@ export const Modal: React.FC<ModalProps> = ({
       <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose} />
       <div 
         className={cn(
-          "relative bg-white rounded-lg shadow-xl transition-all",
+          "relative bg-primary-blue rounded-lg shadow-xl transition-all w-[90%] md:w-[600px] lg:w-[800px] max-h-[90vh] md:max-h-[80vh] lg:max-h-[75vh] overflow-y-auto",
           className
         )}
-        style={{ width: `${width}px` }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center p-4 border-b">

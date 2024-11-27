@@ -29,7 +29,7 @@ const ASSETS = {
     'public/imgs/me/lang.png': `${BASE_URL}/imgs/me/lang.png`,
     'public/imgs/mint/bg.png': `${BASE_URL}/imgs/mint/bg.png`,
     'public/nft/hambuger.png': `${BASE_URL}/nft/hambuger.png`,
-    'public/imgs/mint/bad.png': `${BASE_URL}/imgs/mint/bad.png`,
+    'public/imgs/mint/bag.png': `${BASE_URL}/imgs/mint/bag.png`,
     'public/imgs/coin_logo.svg': `${BASE_URL}/imgs/coin_logo.svg`,
     'public/imgs/friend/bg.png': `${BASE_URL}/imgs/friend/bg.png`,
     'public/imgs/me/avator.png': `${BASE_URL}/imgs/me/avator.png`,

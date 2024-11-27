@@ -7,18 +7,19 @@ import { NAV_ITEMS } from './config';
 const styles = {
   container: [
     'fixed bottom-0 left-0 right-0 w-full',
-    'h-[65px] sm:h-[75px]',
+    'h-[65px] sm:h-[75px] md:h-[85px] lg:h-[100px]',
     'bg-gradient-to-r from-[#6db3e1] via-[#e2a9d7] to-[#6db3e1]',
     'rounded-t-[20px] border-t-2 border-black',
     'shadow-lg z-50',
     'backdrop-blur-sm'
   ].join(' '),
-  
+
   navWrapper: 'flex justify-around items-center h-full px-2',
-  
+
   navItem: (isActive: boolean) => cn(
     'relative flex flex-col items-center justify-center',
-    'w-[70px] h-[55px] rounded-xl',
+    'w-[70px] h-[55px] md:w-[85px] md:h-[70px] lg:w-[100px] lg:h-[85px]',
+    'rounded-xl',
     'transition-all duration-300 ease-in-out',
     'cursor-pointer transform hover:-translate-y-1 active:translate-y-0',
     'hover:scale-105 active:scale-95',
@@ -31,19 +32,19 @@ const styles = {
     ].join(' '),
     'border-2 border-black'
   ),
-  
+
   navIcon: (isActive: boolean) => cn(
-    'w-6 h-6',
+    'w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8',
     'transition-transform duration-300 ease-out',
     isActive && 'scale-110 -translate-y-1'
   ),
-  
+
   navLabel: cn(
     'text-xs font-bold text-white mt-1',
     'transition-opacity duration-300',
     'text-shadow-sm'
   ),
-  
+
   activeIndicator: [
     'absolute -top-1 left-1/2',
     'w-1 h-1 bg-white rounded-full',
