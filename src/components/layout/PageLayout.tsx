@@ -1,7 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Container } from './Container';
-import { theme } from '@/styles/utils';
 import { BottomNavigation } from '../BottomNavigation';
 
 interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,9 +17,10 @@ export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
       <div
         ref={ref}
         className={cn(
-          'min-h-screen w-screen',
+          'min-h-screen w-full',
           'bg-center bg-no-repeat bg-cover',
-          withNavigation && `pb-[${theme.layout.navigation.height}]`,
+          withNavigation && 'pb-[65px] sm:pb-[75px]',
+          'pt-[60px] sm:pt-[70px] lg:pt-[80px]',
           className
         )}
         style={background ? { backgroundImage: `url(${background})` } : undefined}

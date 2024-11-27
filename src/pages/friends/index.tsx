@@ -1,6 +1,7 @@
-import React from "react";
+import React from 'react';
+import { Button } from '@/components/ui/Button';
 
-export default function MintVew() {
+export default function FriendsView() {
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
@@ -23,17 +24,17 @@ export default function MintVew() {
       </div>
 
       <div className="flex flex-col items-center justify-center mt-[150px]">
-        <div className=" text-[40px] text-[#efac57] font-bold">
+        <div className="text-[40px] text-[#efac57] font-bold">
           INVITE FRIENDS
         </div>
-        <div className=" w-2/3  text-center text-[18px] text-[#000] font-bold">
+        <div className="w-2/3 text-center text-[18px] text-[#000] font-bold">
           You are your friend will receive bonuses!
         </div>
       </div>
 
       <div className="mt-[10px] w-full flex justify-center items-center">
         <div
-          className="w-[277px] h-[102px] shadow  flex items-center  justify-center  bg-center bg-no-repeat bg-contain"
+          className="w-[277px] h-[102px] shadow flex items-center justify-center bg-center bg-no-repeat bg-contain"
           style={{
             backgroundImage: "url('/imgs/friend/message_bg.png')",
           }}
@@ -52,11 +53,13 @@ export default function MintVew() {
       </div>
 
       <div className="flex items-center justify-center mt-[50%]">
-        <div className="w-[231px] h-[45px] px-[46px] py-2 bg-[#e04936] rounded-[100px] shadow border border-black justify-center items-center gap-2.5 inline-flex">
-          <div className="text-center text-white text-xl font-black font-['Poppins']">
-            Invite a Friend
-          </div>
-        </div>
+        <Button 
+          variant="primary" 
+          size="lg"
+          rounded="full"
+        >
+          Invite a Friend
+        </Button>
       </div>
     </div>
   );

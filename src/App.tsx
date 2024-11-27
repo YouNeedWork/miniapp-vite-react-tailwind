@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { useImagePreload } from './hooks/useImagePreload';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { AppProviders } from './providers';
 import CustomRouter from "@/route"
 
 
@@ -15,7 +16,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Suspense fallback={<LoadingScreen />}>
-        <CustomRouter />
+        <AppProviders>
+          <CustomRouter />
+        </AppProviders>
       </Suspense>
     </ErrorBoundary>
   );

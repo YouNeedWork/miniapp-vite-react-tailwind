@@ -1,45 +1,48 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { theme } from '@/styles/utils';
+import { buttonVariants } from './styles';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'primary' | 'secondary' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: keyof typeof buttonVariants.variants;
+  size?: keyof typeof buttonVariants.sizes;
+  rounded?: keyof typeof buttonVariants.rounded;
+  fullWidth?: boolean;
   isLoading?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'default', size = 'md', isLoading, children, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-colors';
-    const variants = {
-      default: 'bg-white text-gray-900 hover:bg-gray-100',
-      primary: `bg-[${theme.colors.primary.blue}] text-white hover:bg-opacity-90`,
-      secondary: `bg-[${theme.colors.primary.pink}] text-white hover:bg-opacity-90`,
-      outline: 'border border-gray-300 bg-transparent hover:bg-gray-100'
-    };
-    const sizes = {
-      sm: 'h-8 px-3 text-sm',
-      md: 'h-10 px-4',
-      lg: 'h-12 px-6 text-lg'
-    };
-
+  ({ 
+    className, 
+    variant = 'primary',
+    size = 'md',
+    rounded = 'md',
+    fullWidth = false,
+    isLoading = false,
+    children,
+    disabled,
+    ...props 
+  }, ref) => {
     return (
       <button
         ref={ref}
         className={cn(
-          baseStyles,
-          variants[variant],
-          sizes[size],
-          isLoading && 'opacity-50 cursor-not-allowed',
+          buttonVariants.base,
+          buttonVariants.variants[variant],
+          buttonVariants.sizes[size],
+          buttonVariants.rounded[rounded],
+          fullWidth && 'w-full',
+          (isLoading || disabled) && 'opacity-50 cursor-not-allowed',
           className
         )}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         {...props}
       >
-        {isLoading ? (
-          <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-white" />
-        ) : null}
-        {children}
+        <div className="flex items-center justify-center gap-2">
+          {isLoading && (
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          )}
+          {children}
+        </div>
       </button>
     );
   }
