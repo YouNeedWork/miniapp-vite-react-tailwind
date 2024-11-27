@@ -24,21 +24,20 @@ export const BackpackItem: React.FC<BackpackItemProps> = ({
       !hasQuantity && "opacity-50"
     )}>
       {item.isCard && item.isEquipped && (
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-          <span className="text-white text-xs">✓</span>
+        <div className="flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 bg-green-500 rounded-full border-2 border-white">
+          <span className="text-xs text-white">✓</span>
         </div>
       )}
       
-      <div className="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg p-2">
-        <img
-          src={item.image}
-          alt={item.name}
-          className="w-full h-full object-contain filter drop-shadow-lg"
-        />
+      <div 
+        className="flex justify-center items-center p-2 w-16 h-16 rounded-lg bg-white/10"
+        style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        {/* Remove the img tag */}
       </div>
       
       <div className="mt-2 w-full text-center">
-        <span className="text-sm font-bold text-white text-shadow-sm truncate block">
+        <span className="block text-sm font-bold text-white truncate text-shadow-sm">
           {item.name}
         </span>
         <span className={cn(

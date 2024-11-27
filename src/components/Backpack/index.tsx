@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { BackpackItem } from './BackpackItem';
 import { useBackpackItems, type BackpackItem as BackpackItemType } from '@/hooks/useBackpackItems';
@@ -12,6 +12,12 @@ interface BackpackProps {
 export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
   const { data: items = [], refetch } = useBackpackItems();
   const { eatHamburger } = useEatHamburger();
+
+  useEffect(() => {
+    if (isOpen) {
+      refetch();
+    }
+  }, [isOpen, refetch]);
 
   const handleEat = async () => {
     try {
