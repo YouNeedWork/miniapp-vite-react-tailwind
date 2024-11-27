@@ -3,11 +3,13 @@ import { theme } from '@/styles/theme';
 export const modalStyles = {
   base: [
     'relative',
-    `bg-gradient-to-b from-[${theme.colors.background.light}] to-[${theme.colors.primary.lightBlue}]`,
+    'bg-white',
     'rounded-2xl border-4',
     `border-[${theme.colors.primary.blue}]`,
     'shadow-2xl',
     'overflow-hidden',
+    'max-h-[90vh]',
+    'flex flex-col',
   ].join(' '),
 
   header: [
@@ -34,8 +36,8 @@ export const modalStyles = {
   ].join(' '),
 
   content: [
-    'p-6',
-    'max-h-[70vh] overflow-y-auto',
+    'flex-1',
+    'overflow-y-auto',
     'scrollbar-thin',
     `scrollbar-thumb-[${theme.colors.primary.blue}]`,
     `scrollbar-track-[${theme.colors.primary.lightBlue}]`,
@@ -61,7 +63,7 @@ export const backpackStyles = {
   itemImageWrapper: [
     'w-16 h-16',
     'flex items-center justify-center',
-    'bg-white/10 rounded-lg',
+    'bg-white/90 rounded-lg',
     'p-2',
   ].join(' '),
 
@@ -93,14 +95,24 @@ export const backpackStyles = {
 };
 
 export const shopStyles = {
-  list: [
-    'space-y-4 p-4',
+  container: [
+    'flex flex-col',
+    'h-full max-h-[70vh]',
+    'bg-white',
+  ].join(' '),
+
+  content: [
+    'flex-1',
+    'overflow-y-auto',
+    'p-4',
+    'space-y-4',
+    'bg-[#fdeeba]',
   ].join(' '),
 
   item: [
     'flex items-center gap-4',
     'p-4 rounded-xl',
-    `bg-gradient-to-r from-[${theme.colors.primary.blue}] to-[${theme.colors.primary.lightBlue}]`,
+    `bg-gradient-to-b from-[${theme.colors.primary.blue}] to-[${theme.colors.primary.lightBlue}]`,
     'border-2 border-white',
     'transform transition-all duration-200',
     'hover:translate-x-1',
@@ -123,7 +135,7 @@ export const shopStyles = {
 
   itemDescription: [
     'text-sm',
-    `text-[${theme.colors.background.light}]/80`,
+    `text-[${theme.colors.background.light}]/90`,
     'mt-1',
   ].join(' '),
 
@@ -141,7 +153,7 @@ export const shopStyles = {
     'font-bold',
   ].join(' '),
 
-  buyButton: [
+  rentButton: [
     'px-4 py-2 rounded-lg',
     `bg-gradient-to-b from-[${theme.colors.primary.red}] to-[${theme.colors.primary.pink}]`,
     'text-white font-bold',

@@ -1,45 +1,48 @@
 import React from 'react';
-import { NFT_IMAGES } from '@/constants/images';
-import { cn } from '@/lib/utils';
 import { Modal } from '@/components/ui/Modal';
-import { backpackStyles as styles } from '@/components/ui/Modal/styles';
+import { BackpackItem } from './BackpackItem';
+import { useBackpackItems, type BackpackItem as BackpackItemType } from '@/hooks/useBackpackItems';
+import { useEatHamburger } from '@/hooks/useEatHamburger';
 
 interface BackpackProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const items = [
-  { id: 1, name: 'Gold', image: NFT_IMAGES.GOLD, quantity: 100 },
-  { id: 2, name: 'Hamburger', image: NFT_IMAGES.HAMBURGER, quantity: 5 },
-  { id: 3, name: 'Gold Ore', image: NFT_IMAGES.GOLD_ORE, quantity: 50 },
-  { id: 4, name: 'Iron Ore', image: NFT_IMAGES.IRON_ORE, quantity: 200 },
-  { id: 5, name: 'Copper Ore', image: NFT_IMAGES.COPPER_ORE, quantity: 150 },
-  { id: 6, name: 'Silver Ore', image: NFT_IMAGES.SILVER_ORE, quantity: 75 },
-];
-
 export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
+  const { data: items = [], refetch } = useBackpackItems();
+  const { eatHamburger } = useEatHamburger();
+
+  const handleEat = async () => {
+    try {
+      const success = await eatHamburger();
+      if (success) {
+        await refetch();
+      }
+    } catch (error) {
+      console.error('Failed to eat hamburger:', error);
+    }
+  };
+
+  const handleToggleEquip = async (item: BackpackItemType) => {
+    // TODO: Implement card equip/unequip logic
+    console.log('Toggle equip for item:', item);
+  };
+
   return (
     <Modal
       title="My Backpack"
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className={styles.grid}>
+      <div className="grid grid-cols-3 gap-4 p-4">
         {items.map((item) => (
-          <div key={item.id} className={styles.item}>
-            <div className={styles.itemImageWrapper}>
-              <img
-                src={item.image}
-                alt={item.name}
-                className={styles.itemImage}
-              />
-            </div>
-            <div className={styles.itemDetails}>
-              <span className={styles.itemName}>{item.name}</span>
-              <span className={styles.itemQuantity}>x{item.quantity}</span>
-            </div>
-          </div>
+          <BackpackItem
+            key={item.id}
+            item={item}
+            onEat={item.type === 'HAMBURGER' ? handleEat : undefined}
+            onToggleEquip={item.isCard ? handleToggleEquip : undefined}
+          />
         ))}
       </div>
     </Modal>

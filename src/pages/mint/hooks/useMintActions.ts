@@ -1,16 +1,22 @@
+import { useCallback } from 'react';
 import { useCurrentSession, useCurrentAddress, useCreateSessionKey } from '@roochnetwork/rooch-sdk-kit';
 import { RoochClient, Transaction, Args, RoochAddress } from '@roochnetwork/rooch-sdk';
 import { PKG } from '@/constants/config';
+import { useMineInfo, MINE_INFO_QUERY_KEY } from '@/hooks/queries/useMineInfo';
+import { useQueryClient } from '@tanstack/react-query';
+
+const client = new RoochClient({ url: 'https://test-seed.rooch.network/' });
 
 export const useMintActions = () => {
-  const client = new RoochClient({ url: 'https://test-seed.rooch.network/' });
   const sessionKey = useCurrentSession();
   const address = useCurrentAddress();
   const { mutateAsync: createSessionKey } = useCreateSessionKey();
+  const { data: mineInfo } = useMineInfo();
+  const queryClient = useQueryClient();
 
-  const handleMine = async () => {
+  const handleMine = useCallback(async () => {
     try {
-      if (!address) return;
+      if (!address) return false;
 
       if (!sessionKey) {
         await createSessionKey({
@@ -21,15 +27,10 @@ export const useMintActions = () => {
         });
       }
 
-      const objects = await client.getStates({
-        accessPath: `/resource/${address.genRoochAddress().toHexAddress()}/${PKG}::gold_miner::MineInfo`,
-        stateOption: { decode: true }
-      });
+      const txn = new Transaction();
 
-      if (objects.length === 0) {
+      if (!mineInfo) {
         const inviter = localStorage.getItem('inviter');
-        const txn = new Transaction();
-
         txn.callFunction({
           address: PKG,
           module: 'gold_miner',
@@ -41,17 +42,7 @@ export const useMintActions = () => {
           ],
           typeArgs: [],
         });
-
-        const result = await client.signAndExecuteTransaction({
-          transaction: txn,
-          signer: sessionKey as any,
-        });
-
-        if (result.execution_info.status.type !== 'executed') {
-          throw new Error('Failed to start mining');
-        }
       } else {
-        const txn = new Transaction();
         txn.callFunction({
           address: PKG,
           module: 'gold_miner',
@@ -59,19 +50,24 @@ export const useMintActions = () => {
           args: [],
           typeArgs: [],
         });
-
-        const result = await client.signAndExecuteTransaction({
-          transaction: txn,
-          signer: sessionKey as any,
-        });
-
-        return result.execution_info.status.type === 'executed';
       }
+
+      const result = await client.signAndExecuteTransaction({
+        transaction: txn,
+        signer: sessionKey as any,
+      });
+
+      if (result.execution_info.status.type === 'executed') {
+        await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
+        return true;
+      }
+
+      return false;
     } catch (error) {
       console.error('Mining error:', error);
-      throw error;
+      return false;
     }
-  };
+  }, [address, sessionKey, createSessionKey, mineInfo, queryClient]);
 
   return { handleMine };
 };

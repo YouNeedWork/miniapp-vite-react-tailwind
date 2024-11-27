@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Wallet from '@/components/Wallet';
 import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
-import { Icons } from './components/Icons';
+import { Actions } from './components/Actions';
 import { useMintActions } from './hooks/useMintActions';
 import { useBalances } from './hooks/useBalances';
 import { useHunger } from './hooks/useHunger';
@@ -12,11 +12,17 @@ import { Shop } from '@/components/Shop';
 export default function MintView() {
   const address = useCurrentAddress();
   const { handleMine } = useMintActions();
-  const { goldBalance, RgasBalance } = useBalances();
-  const { hunger } = useHunger();
+  const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
+  const { hunger, refetchHunger } = useHunger();
 
   const [isBackpackOpen, setIsBackpackOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
+
+  const handleRefresh = () => {
+    refetchGoldBalance();
+    refetchRgasBalance();
+    refetchHunger();
+  };
 
   return (
     <div
@@ -24,7 +30,7 @@ export default function MintView() {
       style={{ backgroundImage: "url('/imgs/mint/bg.png')" }}
     >
       <AudioControl className="absolute top-4 right-4 z-50" />
-      
+
       <div
         className="w-full h-[90px] bg-center bg-no-repeat bg-cover flex items-center justify-center gap-2"
         style={{ backgroundImage: "url('/imgs/mint/title_bg.png')" }}
@@ -52,11 +58,12 @@ export default function MintView() {
       </div>
 
       {address ? (
-        <Icons 
-          mine={handleMine} 
+        <Actions
+          mine={handleMine}
           hunger={String(hunger)}
           onOpenBackpack={() => setIsBackpackOpen(true)}
           onOpenShop={() => setIsShopOpen(true)}
+          onRefresh={handleRefresh}
         />
       ) : (
         <Wallet />

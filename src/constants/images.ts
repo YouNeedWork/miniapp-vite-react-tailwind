@@ -54,5 +54,8 @@ export const NFT_IMAGES = {
   IRON_ORE: '/nft/iron_ore_1.png',
   COPPER_ORE: '/nft/copper_ore_1.png',
   SILVER_ORE: '/nft/silver_ore_1.png',
-  REFINING_POTION: '/nft/refining_potion_1.png'
+  REFINING_POTION: '/nft/refining_potion_1.png',
+  BOOST_CARD: '/nft/boost_card.png',
+  OG_CARD: '/nft/og_card.png',
+  EARLY_CARD: '/nft/early_card.png'
 } as const;

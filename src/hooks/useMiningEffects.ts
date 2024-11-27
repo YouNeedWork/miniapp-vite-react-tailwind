@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 
 export const useMiningEffects = () => {
   const [isAnimating, setIsAnimating] = useState(false);
-  const miningSound = useRef(new Audio('/audio/mining.mp3'));
+  const miningSound = useRef(new Audio('/audio/mining.wav'));
   const coinSound = useRef(new Audio('/audio/coin.mp3'));
 
   const playMiningEffect = useCallback(async () => {

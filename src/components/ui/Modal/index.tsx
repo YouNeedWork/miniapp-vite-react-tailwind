@@ -1,8 +1,6 @@
-import React from 'react';
-import { Modal as AntModal } from 'antd';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { modalStyles } from './styles';
 
 interface ModalProps {
   title: string;
@@ -21,26 +19,48 @@ export const Modal: React.FC<ModalProps> = ({
   width = 360,
   className,
 }) => {
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   return (
-    <AntModal
-      open={isOpen}
-      onCancel={onClose}
-      footer={null}
-      width={width}
-      className={cn('game-modal', className)}
-      modalRender={(node) => (
-        <div className={modalStyles.base}>
-          <div className={modalStyles.header}>
-            <h3 className={modalStyles.title}>{title}</h3>
-            <button onClick={onClose} className={modalStyles.closeButton}>
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <div className={modalStyles.content}>
-            {children}
-          </div>
+    <div className="flex overflow-y-auto fixed inset-0 z-50 justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose} />
+      <div 
+        className={cn(
+          "relative bg-white rounded-lg shadow-xl transition-all",
+          className
+        )}
+        style={{ width: `${width}px` }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <h3 className="text-lg font-semibold">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500 focus:outline-none"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
-    />
+        <div className="p-4">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 };
