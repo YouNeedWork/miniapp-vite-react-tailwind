@@ -173,7 +173,7 @@ export default function MintVew() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center">
+      <div className="flex justify-center items-center">
         <div className=" h-[55px] px-5 py-[5px] bg-[#999de4] rounded-xl shadow border border-black justify-start items-center gap-[18px] inline-flex">
           <div className="w-[25.17px] h-[36.94px] relative">
             <div className="w-[19.07px] h-[36.94px] left-0 top-0 absolute bg-[#5c5c5c] rounded-sm border border-black"></div>
@@ -183,39 +183,39 @@ export default function MintVew() {
             </div>
             <div className="w-[7.75px] h-[7.75px] left-[5.36px] top-[16.09px] absolute bg-[#db433e] rounded-full border border-black"></div>
           </div>
-          <div className="text-[#edad4b] text-[20px] font-black font-['Poppins'] uppercase">
-            {String(RgasBalance)} - {String(hunger)}
+          <div className="text-[#edad4b] text-3xl font-black font-['Poppins'] uppercase">
+            {String(RgasBalance)}
           </div>
         </div>
       </div>
 
       {
-        address != undefined ? <Icons mine={handleMine} /> : <Wallet />
+        address != undefined ? <Icons mine={handleMine} hunger={String(hunger!)} /> : <Wallet />
       }
 
     </div>
   );
 }
 
-const Icons = ({ mine }: { mine: () => void }) => {
+const Icons = ({ mine, hunger }: { mine: () => void, hunger: String }) => {
   return <>
     <div className="flex justify-between  items-center w-full  absolute right  bottom-[120px]">
-    <img
+      <img
         alt=""
         src="/imgs/mint/bad.png"
         className="w-[120px] h-[140px] absolute right-[10px] bottom-[90px]"
       />
       <div className="w-[58px] h-[69.90px] left-[20px] top-0 relative">
-          <div className="w-14 h-[46px] left-[2px] top-0 absolute">
-            <div className="w-[46px] h-[46px] left-0 top-0 flex items-center justify-center absolute bg-[#afe1fa] rounded-[266.12px] border border-black flex items-center justify-center">
-              <ShoppingBag />
-            </div>
-            
+        <div className="w-14 h-[46px] left-[2px] top-0 absolute">
+          <div className="w-[46px] h-[46px] left-0 top-0 flex items-center justify-center absolute bg-[#afe1fa] rounded-[266.12px] border border-black flex items-center justify-center">
+            <ShoppingBag />
           </div>
-          <div className="left-[10px] top-[49.90px] absolute text-center text-white text-[13px] font-black font-['Poppins']">
-            Shop
-          </div>
+
         </div>
+        <div className="left-[10px] top-[49.90px] absolute text-center text-white text-[13px] font-black font-['Poppins']">
+          Shop
+        </div>
+      </div>
       <div className=" absolute bottom-[250px] right-[20px] w-[73px] h-[73px] bg-[#e04936] rounded-full shadow border border-black">
         <div className="text-center text-white text-[29px] font-black font-['Poppins'] uppercase">
           1
@@ -225,9 +225,9 @@ const Icons = ({ mine }: { mine: () => void }) => {
         </div>
       </div>
 
-     
-      <div className="flex items-center justify-center w-full gap-5 ">
-        
+
+      <div className="flex gap-5 justify-center items-center w-full">
+
       </div>
 
       <div className="absolute right-[40px] text-center" onClick={mine}>
@@ -243,9 +243,10 @@ const Icons = ({ mine }: { mine: () => void }) => {
 
         <div className="h-[13px] px-1 py-[3px] left-[35px] top-0 absolute bg-[#67d488] rounded-lg border justify-center items-center gap-2.5 inline-flex">
           <div className="text-center text-white text-[9.76px] font-normal font-['Santral-ExtraBold'] capitalize">
-            1
+            {hunger}
           </div>
         </div>
+
       </div>
     </div></>
 }
