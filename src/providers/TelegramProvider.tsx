@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { type Telegram } from "@twa-dev/types";
 import { login } from "../api";
 
@@ -7,12 +7,6 @@ interface TelegramContextType {
   webApp: Telegram["WebApp"] | null;
   user: Telegram["WebApp"]["initDataUnsafe"]["user"] | null;
   ready: boolean;
-}
-
-declare global {
-  interface Window {
-    Telegram: Telegram;
-  }
 }
 
 const TelegramContext = createContext<TelegramContextType>({
@@ -29,30 +23,28 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && typeof window.Telegram !== "undefined" && typeof window.Telegram.WebApp !== "undefined") {
-      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== "") {
-        const app = window.Telegram.WebApp;
+    if (typeof window !== "undefined" && window.Telegram?.WebApp) {
+      const app = window.Telegram.WebApp;
+      if (app.initData) {
         setTelegram(window.Telegram);
         setWebApp(app);
         if (app.initDataUnsafe?.user) {
           setUser(app.initDataUnsafe.user);
         }
 
-        window.Telegram.WebApp.expand();
-        window.Telegram.WebApp.ready();
-        const WebApp = window.Telegram.WebApp;
-        const initData = WebApp.initData;
-        const referrerCode = WebApp.initDataUnsafe.start_param ?? "";
+        app.expand();
+        app.ready();
+        
+        const initData = app.initData;
+        const referrerCode = app.initDataUnsafe.start_param ?? "";
 
         const token = localStorage.getItem("token");
-        if (token == null && initData) {
+        if (!token && initData) {
           login(initData, referrerCode)
             .then((res: any) => {
               localStorage.setItem("token", res.token);
             })
-            .catch((err: any) => {
-              console.log(err);
-            });
+            .catch(console.error);
         }
 
         setReady(true);
@@ -64,20 +56,12 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <TelegramContext.Provider
-      value={{
-        telegram,
-        webApp,
-        user,
-        ready,
-      }}
-    >
+    <TelegramContext.Provider value={{ telegram, webApp, user, ready }}>
       {children}
     </TelegramContext.Provider>
   );
 }
 
 export function useTelegram() {
-  const context = useContext(TelegramContext);
-  return context;
+  return useContext(TelegramContext);
 }

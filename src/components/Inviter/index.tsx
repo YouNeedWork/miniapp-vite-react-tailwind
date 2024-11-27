@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export default function Inviter() {
+export const Inviter: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -20,4 +20,4 @@ export default function Inviter() {
   }, [searchParams]);
 
   return null;
-}
+};
