@@ -1,6 +1,17 @@
 import React from "react";
 
+
 export default function MintVew() {
+  const handleDisconnect = async () => {
+    // Add your wallet disconnection logic here
+    // Example:
+    //await wallet.disconnect();
+    // or
+
+    // Redirect to home page or login page after disconnection
+    //window.location.href = '/';
+  };
+
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
@@ -21,7 +32,7 @@ export default function MintVew() {
       </div>
 
       <div className=" flex flex-col gap-8  absolute bottom-[70px]  w-screen h-[491px] bg-[#fdeeba] rounded-[20px] border border-black px-[20px] pt-[32px]">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center cursor-pointer" onClick={handleDisconnect}>
           <div className="flex gap-2 items-center">
             <img
               src="/imgs/me/wallet_icon.png"
@@ -29,7 +40,7 @@ export default function MintVew() {
               alt=""
             />
             <div className="text-black text-base font-bold font-['Poppins'] leading-tight">
-              My Wallet
+              Disconnect
             </div>
           </div>
           <img

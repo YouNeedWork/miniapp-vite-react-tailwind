@@ -77,10 +77,9 @@ export default function MintView() {
           onOpenBackpack={() => setIsBackpackOpen(true)}
           onOpenShop={() => setIsShopOpen(true)}
           onRefresh={handleRefresh}
-          className="mt-4 md:mt-6 lg:mt-12"
         />
       ) : (
-        <Wallet className="mt-4 md:mt-6 lg:mt-12" />
+        <Wallet />
       )}
 
       <Backpack isOpen={isBackpackOpen} onClose={() => setIsBackpackOpen(false)} />
