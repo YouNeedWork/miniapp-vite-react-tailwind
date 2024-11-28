@@ -1,16 +1,16 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import type { BackpackItem } from '@/hooks/useBackpackItems';
+import type { BackpackItemType } from '@/hooks/useBackpackItems';
 
 interface BackpackItemProps {
-  item: BackpackItem;
+  item: BackpackItemType;
   onEat?: () => void;
-  onToggleEquip?: (item: BackpackItem) => void;
+  onToggleEquip?: (item: BackpackItemType) => void;
 }
 
-export const BackpackItem: React.FC<BackpackItemProps> = ({ 
-  item, 
+export const BackpackItem: React.FC<BackpackItemProps> = ({
+  item,
   onEat,
   onToggleEquip
 }) => {
@@ -28,14 +28,14 @@ export const BackpackItem: React.FC<BackpackItemProps> = ({
           <span className="text-xs text-white">✓</span>
         </div>
       )}
-      
-      <div 
+
+      <div
         className="flex justify-center items-center p-2 w-16 h-16 rounded-lg bg-white/10"
         style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         {/* Remove the img tag */}
       </div>
-      
+
       <div className="mt-2 w-full text-center">
         <span className="block text-sm font-bold text-white truncate text-shadow-sm">
           {item.name}
@@ -46,7 +46,7 @@ export const BackpackItem: React.FC<BackpackItemProps> = ({
         )}>
           x{item.quantity}
         </span>
-        
+
         {isHamburger && onEat && hasQuantity && (
           <Button
             variant="primary"
@@ -58,7 +58,7 @@ export const BackpackItem: React.FC<BackpackItemProps> = ({
             Eat
           </Button>
         )}
-        
+
         {item.isCard && onToggleEquip && hasQuantity && (
           <Button
             variant={item.isEquipped ? "secondary" : "primary"}

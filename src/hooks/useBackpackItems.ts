@@ -6,7 +6,7 @@ import { NFT_IMAGES } from "@/constants/images";
 
 const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 
-export interface BackpackItem {
+export interface BackpackItemType {
   id: string;
   type: string;
   name: string;
@@ -24,9 +24,9 @@ export const ITEM_TYPES = {
   HAMBURGER: `${PKG}::hambuger::Hambuger`,
   GOLD_ORE: `${PKG}::gold_ore::GoldOre`,
   REFINING_POTION: `${PKG}::refining_potion::RefiningPotion`,
-  BOOST_CARD: `${PKG}::boost_card::BoostCard`,
-  OG_CARD: `${PKG}::og_card::OGCard`,
-  EARLY_CARD: `${PKG}::early_card::EarlyCard`,
+  BOOST_CARD: `${PKG}::boost_nft::BoostNFT`,
+  OG_CARD: `${PKG}::boost_nft::BoostNFT`,
+  EARLY_CARD: `${PKG}::boost_nft::BoostNFT`,
 } as const;
 
 const ITEM_IMAGES = {
@@ -41,12 +41,12 @@ const ITEM_IMAGES = {
   EARLY_CARD: NFT_IMAGES.EARLY_CARD,
 } as const;
 
-const DEFAULT_ITEMS: BackpackItem[] = [
+const DEFAULT_ITEMS: BackpackItemType[] = [
   ...Object.entries(ITEM_TYPES)
     .filter(([key]) => !key.includes("CARD"))
     .map(([key, type]) => ({
       id: type,
-      type: key,
+      type: type,
       name: key
         .split("_")
         .map(
@@ -59,7 +59,7 @@ const DEFAULT_ITEMS: BackpackItem[] = [
   // Add card items
   {
     id: ITEM_TYPES.BOOST_CARD,
-    type: "BOOST_CARD",
+    type: ITEM_TYPES.BOOST_CARD,
     name: "Boost Card",
     image: ITEM_IMAGES.BOOST_CARD,
     quantity: 0,
@@ -69,7 +69,7 @@ const DEFAULT_ITEMS: BackpackItem[] = [
   },
   {
     id: ITEM_TYPES.OG_CARD,
-    type: "OG_CARD",
+    type: ITEM_TYPES.OG_CARD,
     name: "OG Card",
     image: ITEM_IMAGES.OG_CARD,
     quantity: 0,
@@ -79,7 +79,7 @@ const DEFAULT_ITEMS: BackpackItem[] = [
   },
   {
     id: ITEM_TYPES.EARLY_CARD,
-    type: "EARLY_CARD",
+    type: ITEM_TYPES.EARLY_CARD,
     name: "Early Card",
     image: ITEM_IMAGES.EARLY_CARD,
     quantity: 0,
@@ -97,13 +97,13 @@ export const useBackpackItems = () => {
     queryFn: async () => {
       if (!address) return DEFAULT_ITEMS;
 
-      const roochAddress = address.genRoochAddress().toStr();
+      const roochAddress = address.toStr();
       const items = await Promise.all(
         DEFAULT_ITEMS.map(async (item) => {
           const objects = await client.queryObjectStates({
             filter: {
               object_type_with_owner: {
-                object_type: `0x3::object::Object<${item.type}>`,
+                object_type: `${item.type}`,
                 owner: roochAddress,
               },
             },
