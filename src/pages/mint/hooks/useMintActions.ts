@@ -25,22 +25,24 @@ export const useMintActions = () => {
 
   const handleMine = useCallback(async () => {
     try {
-      if (!address) return false;
+      if (!address || !sessionKey) return false;
 
       const isSessionKeyExpired =
-        !sessionKey ||
         sessionKey.getCreateTime() === null ||
-        (sessionKey.getCreateTime() !== null &&
-          Date.now() - sessionKey.getCreateTime() > 60 * 60 * 8 * 1000);
+        Date.now() - sessionKey.getCreateTime() > 60 * 60 * 8 * 1000;
 
       if (isSessionKeyExpired) {
-        await createSessionKey({
+        const newSessionKey = await createSessionKey({
           appName: "rooch",
           appUrl: window.location.href,
           scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
           maxInactiveInterval: 60 * 60 * 8,
         });
+        
+        if (!newSessionKey) return false;
       }
+
+      if (!sessionKey) return false;
 
       const txn = new Transaction();
 

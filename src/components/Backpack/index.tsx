@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { BackpackItem } from './BackpackItem';
-import { useBackpackItems, type BackpackItem as BackpackItemType } from '@/hooks/useBackpackItems';
+import { BackpackItemType, useBackpackItems} from '@/hooks/useBackpackItems';
 import { useEatHamburger } from '@/hooks/useEatHamburger';
 
 interface BackpackProps {

@@ -16,12 +16,28 @@ export interface BackpackItemType {
   cardType?: "boost" | "og" | "early";
   isEquipped?: boolean;
 }
+/*
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::daily_check_in
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::tasks
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::boost_nft
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::gold_ore
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::gold
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::iron_ore
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::auto_miner
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::merkle_proof
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::hamburger
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::admin
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::gold_miner
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::copper_ore
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::silver_ore
+0x76dae881c28a36fa64f313bdda2a3a6613d14931b472f63089f2cd5f2fe41103::refining_potion
+*/
 
 export const ITEM_TYPES = {
   IRON_ORE: `${PKG}::iron_ore::IronOre`,
   SILVER_ORE: `${PKG}::silver_ore::SilverOre`,
   COPPER_ORE: `${PKG}::copper_ore::CopperOre`,
-  HAMBURGER: `${PKG}::hambuger::Hambuger`,
+  HAMBURGER: `${PKG}::hamburger::Hambuger`,
   GOLD_ORE: `${PKG}::gold_ore::GoldOre`,
   REFINING_POTION: `${PKG}::refining_potion::RefiningPotion`,
   BOOST_CARD: `${PKG}::boost_nft::BoostNFT`,
