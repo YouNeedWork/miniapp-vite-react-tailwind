@@ -28,10 +28,10 @@ export const Actions: React.FC<ActionsProps> = ({
       const success = await mine();
       if (!success) {
         // Handle mining failure
-
+      } else {
+        onRefresh?.();
       }
       // Refresh data after mining
-      onRefresh?.();
     } catch (error) {
       console.error('Mining failed:', error);
     }

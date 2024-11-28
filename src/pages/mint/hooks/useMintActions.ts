@@ -17,19 +17,33 @@ import { useQueryClient } from "@tanstack/react-query";
 const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 
 export const useMintActions = () => {
-  const sessionKey = useCurrentSession();
   const address = useCurrentAddress();
-  const { mutateAsync: createSessionKey } = useCreateSessionKey();
+
+  const {
+    mutateAsync: createSessionKey,
+    isPending: isCreatingSessionKey,
+    error: createSessionKeyError,
+    data: sessionKey,
+  } = useCreateSessionKey();
   const { data: mineInfo } = useMineInfo();
   const queryClient = useQueryClient();
 
   const handleMine = useCallback(async () => {
     try {
-      if (!address || !sessionKey) return false;
+      if (!address) return false;
+
+      if (!sessionKey) {
+        const newSessionKey = await createSessionKey({
+          appName: "rooch",
+          appUrl: window.location.href,
+          scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
+          maxInactiveInterval: 60 * 60 * 8,
+        });
+      }
 
       const isSessionKeyExpired =
-        sessionKey.getCreateTime() === null ||
-        Date.now() - sessionKey.getCreateTime() > 60 * 60 * 8 * 1000;
+        sessionKey?.getCreateTime() === null ||
+        Date.now() - sessionKey?.getCreateTime()! > 60 * 60 * 8 * 1000;
 
       if (isSessionKeyExpired) {
         const newSessionKey = await createSessionKey({
@@ -38,7 +52,7 @@ export const useMintActions = () => {
           scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
           maxInactiveInterval: 60 * 60 * 8,
         });
-        
+
         if (!newSessionKey) return false;
       }
 
