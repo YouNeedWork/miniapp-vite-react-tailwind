@@ -1,7 +1,8 @@
 import React from "react";
 
+import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 
-export default function MintVew() {
+export default function MeView() {
   const handleDisconnect = async () => {
     // Add your wallet disconnection logic here
     // Example:
@@ -12,7 +13,8 @@ export default function MintVew() {
     //window.location.href = '/';
   };
 
-  const { address } = useAccount();
+  const address = useCurrentAddress();
+
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
@@ -25,7 +27,7 @@ export default function MintVew() {
           alt=""
         />
         <div className="text-black text-base font-bold font-['Poppins'] capitalize">
-          {address}
+          {address ? `${address.toStr().slice(0, 4)}....${address.toStr().slice(-4)}` : ''}
         </div>
       </div>
 

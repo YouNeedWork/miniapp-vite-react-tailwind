@@ -37,7 +37,7 @@ export const useMintActions = () => {
           appName: "rooch",
           appUrl: window.location.href,
           scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
-          maxInactiveInterval: 60 * 60 * 8,
+          maxInactiveInterval: 60 * 60 * 8 * 1000,
         });
       }
 
@@ -50,14 +50,13 @@ export const useMintActions = () => {
           appName: "rooch",
           appUrl: window.location.href,
           scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
-          maxInactiveInterval: 60 * 60 * 8,
+          maxInactiveInterval: 60 * 60 * 8 * 1000,
         });
 
         if (!newSessionKey) return false;
       }
 
       if (!sessionKey) return false;
-
       const txn = new Transaction();
 
       if (!mineInfo) {
