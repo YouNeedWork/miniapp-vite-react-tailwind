@@ -12,6 +12,7 @@ export default function MintVew() {
     //window.location.href = '/';
   };
 
+  const { address } = useAccount();
   return (
     <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover pt-[60px] relative"
@@ -24,10 +25,7 @@ export default function MintVew() {
           alt=""
         />
         <div className="text-black text-base font-bold font-['Poppins'] capitalize">
-          Mr.Andrew
-        </div>
-        <div className="w-[146.85px] text-black text-xs font-normal font-['Poppins'] capitalize">
-          chen***m@gmail.com
+          {address}
         </div>
       </div>
 

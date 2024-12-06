@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { BackpackItem } from './BackpackItem';
-import { BackpackItemType, useBackpackItems} from '@/hooks/useBackpackItems';
+import { BackpackItemType, useBackpackItems } from '@/hooks/useBackpackItems';
 import { useEatHamburger } from '@/hooks/useEatHamburger';
 
 interface BackpackProps {
@@ -37,7 +37,7 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal
-      title="My Backpack"
+      title="Backpack"
       isOpen={isOpen}
       onClose={onClose}
     >

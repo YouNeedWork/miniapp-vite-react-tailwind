@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 
+
 export default function FriendsView() {
   return (
     <div
@@ -46,15 +47,15 @@ export default function FriendsView() {
             </span>
             <span className="text-[#777cd9] text-sm font-medium font-['Poppins']">
               {" "}
-              +5,000 FREE!
+              +100 Gold!
             </span>
           </div>
         </div>
       </div>
 
       <div className="flex items-center justify-center mt-[50%]">
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           size="lg"
           rounded="full"
         >
