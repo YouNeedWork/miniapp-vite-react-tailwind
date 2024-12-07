@@ -20,7 +20,6 @@ const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 export const useMintActions = () => {
   const address = useCurrentAddress();
   const sessionKey = useCurrentSession();
-  const { mutateAsync: createSessionKey } = useCreateSessionKey();
   const { data: mineInfo } = useMineInfo();
   const queryClient = useQueryClient();
 
@@ -28,12 +27,20 @@ export const useMintActions = () => {
     try {
       if (!address) return false;
 
+      // Check for auth token
+      const authToken = localStorage.getItem('auth_token');
+      if (!authToken) {
+        console.error('Authentication required');
+        return false;
+      }
+
       // Check if we have a valid session key
       const isSessionKeyValid = sessionKey && 
         sessionKey.getCreateTime() !== null && 
         Date.now() - sessionKey.getCreateTime() <= APP_CONFIG.maxInactiveInterval * 1000;
 
       if (!isSessionKeyValid) {
+        console.error('Valid session key required');
         return false;
       }
 

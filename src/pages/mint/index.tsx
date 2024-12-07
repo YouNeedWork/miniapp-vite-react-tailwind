@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Wallet from '@/components/Wallet';
 import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
 import { Actions } from './components/Actions';
@@ -8,15 +8,35 @@ import { useHunger } from './hooks/useHunger';
 import { AudioControl } from '@/components/AudioControl';
 import { Backpack } from '@/components/Backpack';
 import { Shop } from '@/components/Shop';
+import { SessionKeyModal } from '@/components/SessionKeyModal';
+import { useSessionKeyCheck } from '@/hooks/useSessionKeyCheck';
+import { AuthModal } from '@/components/AuthModal';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function MintView() {
   const address = useCurrentAddress();
   const { handleMine } = useMintActions();
   const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
   const { hunger, refetchHunger } = useHunger();
+  const { showModal: showSessionKeyModal, setShowModal: setShowSessionKeyModal, handleCreateSessionKey, isCreating, hasGas } = useSessionKeyCheck();
+  const { isAuthenticated, isAuthenticating, authenticate } = useAuth();
 
   const [isBackpackOpen, setIsBackpackOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  useEffect(() => {
+    if (address && !isAuthenticated && !showAuthModal) {
+      setShowAuthModal(true);
+    }
+  }, [address, isAuthenticated]);
+
+  const handleAuthenticate = async () => {
+    const success = await authenticate();
+    if (success) {
+      setShowAuthModal(false);
+    }
+  };
 
   const handleRefresh = () => {
     refetchGoldBalance();
@@ -71,13 +91,30 @@ export default function MintView() {
       </div>
 
       {address ? (
-        <Actions
-          mine={handleMine}
-          hunger={String(hunger)}
-          onOpenBackpack={() => setIsBackpackOpen(true)}
-          onOpenShop={() => setIsShopOpen(true)}
-          onRefresh={handleRefresh}
-        />
+        <>
+          <Actions
+            mine={handleMine}
+            hunger={String(hunger)}
+            onOpenBackpack={() => setIsBackpackOpen(true)}
+            onOpenShop={() => setIsShopOpen(true)}
+            onRefresh={handleRefresh}
+          />
+          <AuthModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+            onAuthenticate={handleAuthenticate}
+            isAuthenticating={isAuthenticating}
+          />
+          {isAuthenticated && (
+            <SessionKeyModal
+              isOpen={showSessionKeyModal}
+              onClose={() => setShowSessionKeyModal(false)}
+              onCreateSessionKey={handleCreateSessionKey}
+              isCreating={isCreating}
+              hasGas={hasGas}
+            />
+          )}
+        </>
       ) : (
         <Wallet />
       )}
@@ -86,4 +123,4 @@ export default function MintView() {
       <Shop isOpen={isShopOpen} onClose={() => setIsShopOpen(false)} />
     </div>
   );
-}
+};
