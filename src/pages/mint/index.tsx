@@ -20,17 +20,17 @@ export default function MintView() {
   const { hunger, refetchHunger } = useHunger();
   const { showModal: showSessionKeyModal, setShowModal: setShowSessionKeyModal, handleCreateSessionKey, isCreating, hasGas } = useSessionKeyCheck();
   const { isAuthenticated, isAuthenticating, authenticate } = useAuth();
-
   const [isBackpackOpen, setIsBackpackOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     if (address && !isAuthenticated && !showAuthModal) {
-      //setShowAuthModal(true);
+      setShowAuthModal(true);
+    } else {
+      setShowAuthModal(false);
     }
 
-    setShowAuthModal(false);
   }, [address, isAuthenticated]);
 
   const handleAuthenticate = async () => {
@@ -107,7 +107,7 @@ export default function MintView() {
             onAuthenticate={handleAuthenticate}
             isAuthenticating={isAuthenticating}
           />
-          {(
+          {isAuthenticated && (
             <SessionKeyModal
               isOpen={showSessionKeyModal}
               onClose={() => setShowSessionKeyModal(false)}

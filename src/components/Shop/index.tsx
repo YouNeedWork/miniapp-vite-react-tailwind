@@ -19,6 +19,7 @@ import {
 import { PKG } from "@/constants/config";
 import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from 'react-hot-toast';
 
 const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 
@@ -40,24 +41,6 @@ export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
     // TODO: Implement rental logic
 
     try {
-      if (!address || !sessionKey) return false;
-
-      const isSessionKeyExpired =
-        sessionKey.getCreateTime() === null ||
-        Date.now() - sessionKey.getCreateTime() > 60 * 60 * 8 * 1000;
-
-      if (isSessionKeyExpired) {
-        const newSessionKey = await createSessionKey({
-          appName: "rooch",
-          appUrl: window.location.href,
-          scopes: ["0x1::*::*", "0x3::*::*", `${PKG}::*::*`],
-          maxInactiveInterval: 60 * 60 * 8,
-        });
-
-        if (!newSessionKey) return false;
-      }
-
-      if (!sessionKey) return false;
 
       let duration = 0;
       if (days === 3) {
@@ -89,17 +72,26 @@ export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
         typeArgs: [],
       });
 
-      const result = await client.signAndExecuteTransaction({
+      const result: any = await client.signAndExecuteTransaction({
         transaction: txn,
         signer: sessionKey as any,
       });
 
-      if (result.execution_info.status.type === "executed") {
+      if (result.output.status.type === "success") {
         await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
         return true;
+      } else {
+        let error = result.output.status.abort_code;
+        if (error == 4) {
+          error = "Insufficient $GOLD balance";
+        } else if (error == 5) {
+          error = "Invalid miner type";
+        }
+
+        toast.error(error);
+        return false;
       }
 
-      return false;
     } catch (error) {
       console.error("Purchase miner error:", error);
       return false;

@@ -1,16 +1,12 @@
 import React from "react";
 
-import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
+import { useCurrentAddress, useCurrentWallet } from "@roochnetwork/rooch-sdk-kit";
 
 export default function MeView() {
+  const wallet = useCurrentWallet();
   const handleDisconnect = async () => {
-    // Add your wallet disconnection logic here
-    // Example:
-    //await wallet.disconnect();
-    // or
-
-    // Redirect to home page or login page after disconnection
-    //window.location.href = '/';
+    //await wallet?.wallet?.sign(new TextEncoder().encode("123"));
+    //await disconnect();
   };
 
   const address = useCurrentAddress();

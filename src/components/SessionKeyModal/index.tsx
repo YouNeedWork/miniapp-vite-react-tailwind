@@ -33,7 +33,7 @@ export const SessionKeyModal: React.FC<SessionKeyModalProps> = ({
                 You need RGas to create a session key and play the game. Please obtain some RGas first.
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="font-semibold">How to get RGas:</h4>
               <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
@@ -49,7 +49,7 @@ export const SessionKeyModal: React.FC<SessionKeyModalProps> = ({
             variant="primary"
             size="lg"
             fullWidth
-            onClick={() => window.open('https://test-faucet.rooch.network', '_blank')}
+            onClick={() => window.open('https://test-portal.rooch.network/faucet', '_blank')}
           >
             Get RGas
           </Button>
@@ -71,7 +71,7 @@ export const SessionKeyModal: React.FC<SessionKeyModalProps> = ({
             A session key allows you to interact with the game without having to approve every transaction.
             It's valid for {APP_CONFIG.maxInactiveInterval / 3600} hours and makes your gaming experience smoother.
           </p>
-          
+
           <div className="bg-blue-50 p-4 rounded-lg">
             <h4 className="font-semibold mb-2">Session Key Features:</h4>
             <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">

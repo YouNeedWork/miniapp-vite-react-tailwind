@@ -1,8 +1,10 @@
 import { useState, useCallback } from "react";
 import {
   useCurrentAddress,
-  UseSignAndExecuteTransaction,
+  useCurrentWallet,
 } from "@roochnetwork/rooch-sdk-kit";
+
+import { Buffer } from "buffer";
 import { API_BASE_URL } from "@/constants/config";
 
 interface AuthResponse {
@@ -20,6 +22,7 @@ export const useAuth = () => {
     return !!localStorage.getItem("auth_token");
   });
   const address = useCurrentAddress();
+  const wallet = useCurrentWallet();
 
   const getNonce = async (walletAddress: string): Promise<string> => {
     const response = await fetch(
@@ -31,18 +34,17 @@ export const useAuth = () => {
 
   const verifySignature = async (
     signature: string,
-    nonce: string,
     address: string
   ): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         signature,
-        nonce,
-        address,
+        wallet: address,
+        referral: "",
       }),
     });
 
@@ -63,16 +65,22 @@ export const useAuth = () => {
       const nonce = await getNonce(address.toStr());
 
       // Request signature from wallet
-      const message = `Sign this message to authenticate with Gold Miner\nNonce: ${nonce}`;
-      const signature = await window.rooch.request({
-        method: "personal_sign",
-        params: [message, address.toStr()],
-      });
+      const message = `Sign this message to authenticate with Gold Miner\nAddress: ${address.toStr()}\nNonce: ${nonce}`;
+
+      const signature = await wallet?.wallet?.sign(
+        new TextEncoder().encode(message)
+      );
+
+      if (!signature) {
+        throw new Error("Failed to get signature from wallet");
+      }
+
+      // Convert signature bytes to base64
+      const signatureBase64 = Buffer.from(signature).toString("base64");
 
       // Verify signature with backend
       const authResponse = await verifySignature(
-        signature,
-        nonce,
+        signatureBase64,
         address.toStr()
       );
 
