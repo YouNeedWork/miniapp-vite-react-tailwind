@@ -21,28 +21,6 @@ export default function RoochWallet() {
 
 
     const renderWalletBtn = () => {
-        if (connectionStatus === "connected") {
-            return (<>
-                <WalletModal open={walletConnectModal} onCancel={() => {
-                    setWalletConnectModal(false);
-                }}
-                ></WalletModal>
-                <div
-                    onMouseEnter={() => setBtnText("Disconnect")}
-                    onMouseLeave={() =>
-                        setBtnText(currentAddress?.toStr() || "")
-                    }
-                    onClick={handleConnect}
-                    className={
-                        "pc:px-[10px] pc:w-[180px] w-auto px-[5px] text-center py-[5px] rounded pc:ml-[30px] pl-[10px] transition-all cursor-pointer bg-[#00ADB280] hover:bg-[#ff000060]"
-                    }
-                >
-                    {btnText}
-                </div>
-
-            </>
-            );
-        }
         return (<>
             <WalletModal open={walletConnectModal} onCancel={() => {
                 setWalletConnectModal(false);

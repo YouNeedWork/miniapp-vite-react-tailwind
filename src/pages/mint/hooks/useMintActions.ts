@@ -29,11 +29,14 @@ export const useMintActions = () => {
       if (!address) return false;
 
       // Check if we have a valid session key
-      const isSessionKeyValid = sessionKey && 
-        sessionKey.getCreateTime() !== null && 
-        Date.now() - sessionKey.getCreateTime() <= APP_CONFIG.maxInactiveInterval * 1000;
+      const isSessionKeyValid =
+        sessionKey &&
+        sessionKey.getCreateTime() !== null &&
+        Date.now() - sessionKey.getCreateTime() <=
+          APP_CONFIG.maxInactiveInterval * 1000;
 
       if (!isSessionKeyValid) {
+        alert("Session key is invalid");
         return false;
       }
 

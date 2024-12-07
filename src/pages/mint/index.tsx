@@ -27,8 +27,10 @@ export default function MintView() {
 
   useEffect(() => {
     if (address && !isAuthenticated && !showAuthModal) {
-      setShowAuthModal(true);
+      //setShowAuthModal(true);
     }
+
+    setShowAuthModal(false);
   }, [address, isAuthenticated]);
 
   const handleAuthenticate = async () => {
@@ -105,7 +107,7 @@ export default function MintView() {
             onAuthenticate={handleAuthenticate}
             isAuthenticating={isAuthenticating}
           />
-          {isAuthenticated && (
+          {(
             <SessionKeyModal
               isOpen={showSessionKeyModal}
               onClose={() => setShowSessionKeyModal(false)}

@@ -1,6 +1,9 @@
-import { useState, useCallback } from 'react';
-import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
-import { API_BASE_URL } from '@/constants/config';
+import { useState, useCallback } from "react";
+import {
+  useCurrentAddress,
+  UseSignAndExecuteTransaction,
+} from "@roochnetwork/rooch-sdk-kit";
+import { API_BASE_URL } from "@/constants/config";
 
 interface AuthResponse {
   token: string;
@@ -14,21 +17,27 @@ interface AuthResponse {
 export const useAuth = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('auth_token');
+    return !!localStorage.getItem("auth_token");
   });
   const address = useCurrentAddress();
 
   const getNonce = async (walletAddress: string): Promise<string> => {
-    const response = await fetch(`${API_BASE_URL}/auth/nonce?address=${walletAddress}`);
+    const response = await fetch(
+      `${API_BASE_URL}/auth/nonce?address=${walletAddress}`
+    );
     const data = await response.json();
     return data.nonce;
   };
 
-  const verifySignature = async (signature: string, nonce: string, address: string): Promise<AuthResponse> => {
+  const verifySignature = async (
+    signature: string,
+    nonce: string,
+    address: string
+  ): Promise<AuthResponse> => {
     const response = await fetch(`${API_BASE_URL}/auth/verify`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         signature,
@@ -38,7 +47,7 @@ export const useAuth = () => {
     });
 
     if (!response.ok) {
-      throw new Error('Authentication failed');
+      throw new Error("Authentication failed");
     }
 
     return response.json();
@@ -55,21 +64,25 @@ export const useAuth = () => {
 
       // Request signature from wallet
       const message = `Sign this message to authenticate with Gold Miner\nNonce: ${nonce}`;
-      const signature = await window.bitcoin.request({
-        method: 'personal_sign',
+      const signature = await window.rooch.request({
+        method: "personal_sign",
         params: [message, address.toStr()],
       });
 
       // Verify signature with backend
-      const authResponse = await verifySignature(signature, nonce, address.toStr());
+      const authResponse = await verifySignature(
+        signature,
+        nonce,
+        address.toStr()
+      );
 
       // Store auth token
-      localStorage.setItem('auth_token', authResponse.token);
+      localStorage.setItem("auth_token", authResponse.token);
       setIsAuthenticated(true);
 
       return true;
     } catch (error) {
-      console.error('Authentication failed:', error);
+      console.error("Authentication failed:", error);
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -77,7 +90,7 @@ export const useAuth = () => {
   }, [address, isAuthenticating]);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem("auth_token");
     setIsAuthenticated(false);
   }, []);
 

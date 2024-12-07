@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { useWallets } from '@roochnetwork/rooch-sdk-kit';
+import { useConnectWallet, useWallets, Wallet } from '@roochnetwork/rooch-sdk-kit';
 import { Button } from '@/components/ui/Button';
 
 interface WalletModalProps {
@@ -10,6 +10,19 @@ interface WalletModalProps {
 
 export const WalletModal: React.FC<WalletModalProps> = ({ open, onCancel }) => {
   const wallets = useWallets();
+  const { mutateAsync: connectWallet } = useConnectWallet();
+
+  const handleConnect = (wallet: Wallet) => {
+    connectWallet({ wallet })
+      .then(() => onCancel())
+      .catch((error) => {
+        console.error("Failed to connect wallet:", error);
+      });
+  };
+
+  useEffect(() => {
+    console.log("wallets", wallets);
+  }, [wallets]);
 
   return (
     <Modal width={400} footer={null} onCancel={onCancel} open={open}>
@@ -23,9 +36,7 @@ export const WalletModal: React.FC<WalletModalProps> = ({ open, onCancel }) => {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => {
-                  wallet.connect().then(() => onCancel());
-                }}
+                onClick={() => handleConnect(wallet)}
               >
                 Connect
               </Button>
