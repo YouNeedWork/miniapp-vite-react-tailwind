@@ -5,7 +5,7 @@ import {
 } from "@roochnetwork/rooch-sdk-kit";
 import { APP_CONFIG } from "@/constants/config";
 import { useBalances } from "@/hooks/queries/useBalances";
-import { Scope } from "@roochnetwork/rooch-sdk/dist/cjs/session/types";
+import toast from "react-hot-toast";
 
 export const useSessionKeyCheck = () => {
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +26,8 @@ export const useSessionKeyCheck = () => {
 
       if (!isValid) {
         setShowModal(true);
+      } else {
+        setShowModal(false);
       }
     } else {
       setShowModal(true);
@@ -33,7 +35,10 @@ export const useSessionKeyCheck = () => {
   }, [sessionKey]);
 
   const handleCreateSessionKey = async () => {
-    if (!hasGas) return;
+    if (!hasGas) {
+      toast.error("Insufficient RGas. Please obtain some RGas first.");
+      return;
+    }
 
     try {
       await createSessionKey({
@@ -42,15 +47,18 @@ export const useSessionKeyCheck = () => {
         scopes: APP_CONFIG.scopes as any,
         maxInactiveInterval: APP_CONFIG.maxInactiveInterval,
       });
+      toast.success("Session key created successfully");
       setShowModal(false);
     } catch (error) {
       if (
         (error as any)?.code === 1004 &&
         (error as any)?.type === "CantPayGasDeposit"
       ) {
-        console.error("Insufficient gas for session key creation");
+        toast.error("Insufficient gas for session key creation");
       } else {
-        console.error("Failed to create session key:", error);
+        toast.error(
+          "Failed to create session key: " + (error as Error).message
+        );
       }
     }
   };

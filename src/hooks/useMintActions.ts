@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import {
   useCurrentSession,
   useCurrentAddress,
-  useCreateSessionKey,
 } from "@roochnetwork/rooch-sdk-kit";
 import {
   RoochClient,
@@ -14,6 +13,7 @@ import { PKG } from "@/constants/config";
 import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { APP_CONFIG } from "@/constants/config";
+import toast from "react-hot-toast";
 
 const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 
@@ -25,22 +25,27 @@ export const useMintActions = () => {
 
   const handleMine = useCallback(async () => {
     try {
-      if (!address) return false;
+      if (!address) {
+        toast.error("Please connect your wallet first");
+        return false;
+      }
 
       // Check for auth token
-      const authToken = localStorage.getItem('auth_token');
+      const authToken = localStorage.getItem("auth_token");
       if (!authToken) {
-        console.error('Authentication required');
+        toast.error("Authentication required");
         return false;
       }
 
       // Check if we have a valid session key
-      const isSessionKeyValid = sessionKey && 
-        sessionKey.getCreateTime() !== null && 
-        Date.now() - sessionKey.getCreateTime() <= APP_CONFIG.maxInactiveInterval * 1000;
+      const isSessionKeyValid =
+        sessionKey &&
+        sessionKey.getCreateTime() !== null &&
+        Date.now() - sessionKey.getCreateTime() <=
+          APP_CONFIG.maxInactiveInterval * 1000;
 
       if (!isSessionKeyValid) {
-        console.error('Valid session key required');
+        toast.error("Valid session key required");
         return false;
       }
 
@@ -80,12 +85,30 @@ export const useMintActions = () => {
 
       if (result.execution_info.status.type === "executed") {
         await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
+        toast.success("Mining successful!");
         return true;
       }
 
+      // Check for ABORTED status with code 1001
+      if (
+        result.execution_info.status.type === "moveabort" &&
+        result.execution_info.status.abort_code == "1001"
+      ) {
+        toast.error("Please slow down and take a break! Mining too fast.");
+        return false;
+      }
+
       return false;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Mining error:", error);
+
+      // Check for ABORTED status in error object
+      if (error.status?.sub_status === 1001) {
+        toast.error("Please slow down and take a break! Mining too fast.");
+      } else {
+        toast.error("Mining failed: " + error.message);
+      }
+
       return false;
     }
   }, [address, sessionKey, mineInfo, queryClient]);
