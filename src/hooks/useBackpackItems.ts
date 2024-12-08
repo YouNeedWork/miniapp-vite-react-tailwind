@@ -61,7 +61,7 @@ const DEFAULT_ITEMS: BackpackItemType[] = [
   ...Object.entries(ITEM_TYPES)
     .filter(([key]) => !key.includes("CARD"))
     .map(([key, type]) => ({
-      id: type,
+      id: key,
       type: type,
       name: key
         .split("_")
@@ -74,7 +74,7 @@ const DEFAULT_ITEMS: BackpackItemType[] = [
     })),
   // Add card items
   {
-    id: ITEM_TYPES.BOOST_CARD,
+    id: "BOOST_CARD",
     type: ITEM_TYPES.BOOST_CARD,
     name: "Boost Card",
     image: ITEM_IMAGES.BOOST_CARD,
@@ -84,7 +84,7 @@ const DEFAULT_ITEMS: BackpackItemType[] = [
     isEquipped: false,
   },
   {
-    id: ITEM_TYPES.OG_CARD,
+    id: "OG_CARD",
     type: ITEM_TYPES.OG_CARD,
     name: "OG Card",
     image: ITEM_IMAGES.OG_CARD,
@@ -94,7 +94,7 @@ const DEFAULT_ITEMS: BackpackItemType[] = [
     isEquipped: false,
   },
   {
-    id: ITEM_TYPES.EARLY_CARD,
+    id: "EARLY_CARD",
     type: ITEM_TYPES.EARLY_CARD,
     name: "Early Card",
     image: ITEM_IMAGES.EARLY_CARD,
