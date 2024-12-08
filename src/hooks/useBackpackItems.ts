@@ -37,7 +37,7 @@ export const ITEM_TYPES = {
   IRON_ORE: `${PKG}::iron_ore::IronOre`,
   SILVER_ORE: `${PKG}::silver_ore::SilverOre`,
   COPPER_ORE: `${PKG}::copper_ore::CopperOre`,
-  HAMBURGER: `${PKG}::hamburger::Hambuger`,
+  HAMBURGER: `${PKG}::hamburger::Hamburger`,
   GOLD_ORE: `${PKG}::gold_ore::GoldOre`,
   REFINING_POTION: `${PKG}::refining_potion::RefiningPotion`,
   BOOST_CARD: `${PKG}::boost_nft::BoostNFT`,
