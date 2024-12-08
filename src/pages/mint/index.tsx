@@ -10,8 +10,8 @@ import { Backpack } from '@/components/Backpack';
 import { Shop } from '@/components/Shop';
 import { SessionKeyModal } from '@/components/SessionKeyModal';
 import { useSessionKeyCheck } from '@/hooks/useSessionKeyCheck';
-import { AuthModal } from '@/components/AuthModal';
-import { useAuth } from '@/hooks/useAuth';
+import { WelcomeDialog } from '@/components/WelcomeDialog';
+import { useMineInfo } from '@/hooks/queries/useMineInfo';
 
 export default function MintView() {
   const address = useCurrentAddress();
@@ -19,37 +19,44 @@ export default function MintView() {
   const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
   const { hunger, refetchHunger } = useHunger();
   const { showModal: showSessionKeyModal, setShowModal: setShowSessionKeyModal, handleCreateSessionKey, isCreating, hasGas } = useSessionKeyCheck();
-  const { isAuthenticated, isAuthenticating, authenticate } = useAuth();
+  const { data: mineInfo } = useMineInfo();
+
   const [isBackpackOpen, setIsBackpackOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-  useEffect(() => {
-    if (address && !isAuthenticated && !showAuthModal) {
-      setShowAuthModal(true);
-    } else {
-      setShowAuthModal(false);
-    }
-
-  }, [address, isAuthenticated]);
-
-  const handleAuthenticate = async () => {
-    const success = await authenticate();
-    if (success) {
-      setShowAuthModal(false);
-    }
-  };
+  const [isStarting, setIsStarting] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     if (address) {
       handleRefresh();
     }
-  }, []);
+  }, [address]);
+
+  // Show welcome dialog only after session key is created
+  useEffect(() => {
+    if (address && !showSessionKeyModal && !mineInfo) {
+      setShowWelcome(true);
+    } else {
+      setShowWelcome(false);
+    }
+  }, [address, showSessionKeyModal, mineInfo]);
 
   const handleRefresh = () => {
     refetchGoldBalance();
     refetchRgasBalance();
     refetchHunger();
+  };
+
+  const handleStart = async () => {
+    setIsStarting(true);
+    try {
+      await handleMine();
+      setShowWelcome(false);
+    } finally {
+      setIsStarting(false);
+    }
+
+    handleRefresh();
   };
 
   return (
@@ -107,21 +114,19 @@ export default function MintView() {
             onOpenShop={() => setIsShopOpen(true)}
             onRefresh={handleRefresh}
           />
-          <AuthModal
-            isOpen={showAuthModal}
-            onClose={() => setShowAuthModal(false)}
-            onAuthenticate={handleAuthenticate}
-            isAuthenticating={isAuthenticating}
+          <SessionKeyModal
+            isOpen={showSessionKeyModal}
+            onClose={() => setShowSessionKeyModal(false)}
+            onCreateSessionKey={handleCreateSessionKey}
+            isCreating={isCreating}
+            hasGas={hasGas}
           />
-          {isAuthenticated && (
-            <SessionKeyModal
-              isOpen={showSessionKeyModal}
-              onClose={() => setShowSessionKeyModal(false)}
-              onCreateSessionKey={handleCreateSessionKey}
-              isCreating={isCreating}
-              hasGas={hasGas}
-            />
-          )}
+          <WelcomeDialog
+            isOpen={showWelcome}
+            onClose={() => setShowWelcome(false)}
+            onStart={handleStart}
+            isStarting={isStarting}
+          />
         </>
       ) : (
         <Wallet />
@@ -131,4 +136,4 @@ export default function MintView() {
       <Shop isOpen={isShopOpen} onClose={() => setIsShopOpen(false)} />
     </div>
   );
-};
+}

@@ -1,5 +1,7 @@
 import { NFT_IMAGES } from '../constants/images';
 
+const DEFAULT_FALLBACK = '/imgs/icon.png';
+
 export const preloadImage = (url: string): Promise<boolean> => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -9,7 +11,7 @@ export const preloadImage = (url: string): Promise<boolean> => {
     };
     
     img.onerror = () => {
-      console.error(`Failed to load image: ${url}`);
+      console.warn(`Image not found: ${url}, using fallback`);
       resolve(false);
     };
 
@@ -22,16 +24,28 @@ export const getImageUrl = (path: string): string => {
     return path;
   }
   
-  // Path should already include leading slash from constants
-  return path;
+  // First try to get the image directly
+  if (path.startsWith('/')) {
+    const img = new Image();
+    img.src = path;
+    
+    // If image exists, return the path
+    if (img.complete) {
+      return path;
+    }
+  }
+  
+  // If image doesn't exist, return default fallback
+  return DEFAULT_FALLBACK;
 };
 
 export const validateImage = async (url: string): Promise<boolean> => {
   try {
     const response = await fetch(url);
-    return response.ok;
+    const contentType = response.headers.get('content-type');
+    return response.ok && contentType?.startsWith('image/');
   } catch (error) {
-    console.error(`Error validating image ${url}:`, error);
+    console.warn(`Error validating image ${url}:`, error);
     return false;
   }
 };
@@ -41,7 +55,7 @@ export const validateNftImages = async () => {
     Object.entries(NFT_IMAGES).map(async ([key, path]) => {
       const isValid = await validateImage(path);
       if (!isValid) {
-        console.error(`NFT image not found: ${key} at path ${path}`);
+        console.warn(`NFT image not found: ${key}, using fallback`);
       }
       return { key, path, isValid };
     })

@@ -1,17 +1,16 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { TaskList } from './components/TaskList';
 import { TASK_COLORS } from "./components/TaskList/types";
 import type { Task } from "./components/TaskList/types";
 import { useBalances } from "@/hooks/queries/useBalances";
-import { TWITTER_BINDING_QUERY_KEY, useTwitterBinding } from "@/hooks/queries/useTwitterBinding";
+import { useTwitterBinding } from "@/hooks/queries/useTwitterBinding";
 import { useVoteLevel } from "@/hooks/queries/useVoteLevel";
 import { useTwitterClaim } from "@/hooks/useTwitterClaim";
 import { useVoteClaim } from "@/hooks/useVoteClaim";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { getVoteTask } from "@/constants/voteTasks";
-import { useQuery } from '@tanstack/react-query';
-import { Args, RoochClient } from '@roochnetwork/rooch-sdk';
-import { ROOCH_APP } from '@/constants/config';
+import toast from "react-hot-toast";
+import { useTaskCompletion } from '@/hooks/queries/useTaskCompletion';
 
 const createTask = (
   id: string,
@@ -33,82 +32,67 @@ const createTask = (
   onAction,
 });
 
-export default function EarnView() {
+const TWITTER_TASK_ID = 10001;
 
+export default function EarnView() {
   const { RgasBalance } = useBalances();
   const address = useCurrentAddress();
-  const client = new RoochClient({ url: 'https://test-seed.rooch.network/' });
-
-  // Twitter 相关状态
-  const {
-    data: twitterId,
-    refetch: refetchTwitter,
-  } = useQuery({
-    queryKey: ["twitterBinding"],
-    queryFn: async () => {
-      const result = await client.executeViewFunction({
-        address: ROOCH_APP,
-        module: "twitter_account",
-        function: "resolve_author_id_by_address",
-        args: [Args.address(address!)],
-        typeArgs: [],
-      });
-      console.log(result);
-      return result.return_values?.[0]?.decoded_value || null;
-    },
-    enabled: !!address
-  });
-
+  const { data: twitterId, refetch: refetchTwitter } = useTwitterBinding();
+  const { data: vote = 0, refetch: refetchVote } = useVoteLevel();
   const { claimTwitterReward } = useTwitterClaim();
-
-  // 投票相关状态
-  const {
-    data: vote = 0,
-    refetch: refetchVote
-  } = useVoteLevel();
   const { claimVoteReward } = useVoteClaim();
 
-  // 处理 Twitter 任务
+  const { data: twitterTaskClaimed = false } = useTaskCompletion(TWITTER_TASK_ID);
+
+  // Handle Twitter task
   const handleTwitterAction = useCallback(async () => {
+    if (!address) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    if (twitterTaskClaimed) {
+      return;
+    }
+
     try {
-      if (!address) return;
-
-      const twitterData = await refetchTwitter();
-
-      if (twitterData?.data) {
+      if (twitterId && typeof twitterId !== 'object') {
         await claimTwitterReward();
-        await refetchTwitter();
       } else {
-        window.open("https://twitter.com/goldminer_game", "_blank");
+        window.open("https://test-portal.rooch.network/settings", "_blank");
       }
+      await refetchTwitter();
     } catch (error) {
       console.error('Twitter action failed:', error);
+      toast.error("Failed to process Twitter action");
     }
-  }, [address, claimTwitterReward, refetchTwitter]);
+  }, [address, twitterId, claimTwitterReward, refetchTwitter]);
 
-  // 处理投票任务
+  // Handle vote task
   const handleVoteAction = useCallback(async () => {
-    try {
-      if (!address) return;
+    if (!address) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
 
-      const voteData = await refetchVote();
-      if (voteData?.data && Number(voteData.data) > 0) {
-        await claimVoteReward(Number(voteData.data));
-        await refetchVote();
+    try {
+      if (Number(vote) > 0) {
+        await claimVoteReward(Number(vote));
       } else {
         window.open("https://grow.rooch.network/project/goldminer", "_blank");
       }
+      await refetchVote();
     } catch (error) {
       console.error('Vote action failed:', error);
+      toast.error("Failed to process vote action");
     }
-  }, [address, claimVoteReward, refetchVote]);
+  }, [address, vote, claimVoteReward, refetchVote]);
 
-  // 创建任务列表
-  const tasks = useMemo(() => {
+  // Create task list
+  const tasks = React.useMemo(() => {
     const currentVoteTask = getVoteTask(Number(vote) || 0);
     const voteLevel = currentVoteTask.level;
-
-    
+    const hasValidTwitterId = twitterId && typeof twitterId !== 'object';
 
     return [
       createTask(
@@ -127,25 +111,19 @@ export default function EarnView() {
         "/imgs/task_3.png",
         TASK_COLORS.green,
         10000,
-        !!twitterId,
-        twitterId ? "Claim" : "Go",
+        hasValidTwitterId,
+        hasValidTwitterId ? !twitterTaskClaimed ? "Claim" : "Done" : "GO",
         handleTwitterAction
       ),
     ];
-  }, [
-    address,
-    vote,
-    twitterId,
-    handleVoteAction,
-    handleTwitterAction
-  ]);
+  }, [vote, twitterId, handleVoteAction, handleTwitterAction, twitterTaskClaimed]);
 
-  const completedTasks = useMemo(() =>
+  const completedTasks = React.useMemo(() =>
     tasks.filter(task => task.completed),
     [tasks]
   );
 
-  const pendingTasks = useMemo(() => {
+  const pendingTasks = React.useMemo(() => {
     const uncompletedTasks = tasks.filter(task => !task.completed);
     const needsRGas = parseFloat(RgasBalance) === 0;
 
@@ -155,7 +133,11 @@ export default function EarnView() {
   }, [tasks, RgasBalance]);
 
   if (!address) {
-    return <div>Please connect your wallet</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-medium text-gray-600">Please connect your wallet</p>
+      </div>
+    );
   }
 
   return (
@@ -168,14 +150,10 @@ export default function EarnView() {
       <div className="px-[10px] w-full pb-[85px]">
         <Header />
 
-        {false ? (
-          <div>Loading tasks...</div>
-        ) : (
-          <TasksSection
-            pendingTasks={pendingTasks}
-            completedTasks={completedTasks}
-          />
-        )}
+        <TasksSection
+          pendingTasks={pendingTasks}
+          completedTasks={completedTasks}
+        />
       </div>
     </div>
   );

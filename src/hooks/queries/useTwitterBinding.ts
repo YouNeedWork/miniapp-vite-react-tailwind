@@ -1,30 +1,43 @@
 import { useQuery } from "@tanstack/react-query";
-import { Args, RoochClient } from "@roochnetwork/rooch-sdk";
+import { Args } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { ROOCH_APP } from "@/constants/config";
-
-const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+import { createRoochClient } from "@/utils/rooch";
 
 export const TWITTER_BINDING_QUERY_KEY = ["twitterBinding"] as const;
 
 export const useTwitterBinding = () => {
   const address = useCurrentAddress();
+  const client = createRoochClient();
 
   return useQuery({
-    queryKey: [...TWITTER_BINDING_QUERY_KEY, address],
+    queryKey: [...TWITTER_BINDING_QUERY_KEY, address?.toStr()],
     queryFn: async () => {
-      const result = await client.executeViewFunction({
-        address: ROOCH_APP,
-        module: "twitter_account",
-        function: "resolve_author_id_by_address",
-        args: [Args.address(address!)],
-        typeArgs: [],
-      });
+      if (!address || !ROOCH_APP) return null;
 
-      console.log(result);
+      try {
+        const result = await client.executeViewFunction({
+          address: ROOCH_APP,
+          module: "twitter_account",
+          function: "resolve_author_id_by_address",
+          args: [Args.address(address)],
+          typeArgs: [],
+        });
 
-      return result.return_values?.[0]?.decoded_value || null;
+        // Check if we have a valid Twitter ID
+        const returnValue: any = result.return_values?.[0]?.value;
+        if (!returnValue) return null;
+        if (returnValue.value == "0x00") return null;
+
+        return returnValue.value;
+      } catch (error) {
+        console.error("Failed to fetch Twitter binding:", error);
+        return null;
+      }
     },
-    enabled: address !== undefined,
+    enabled: !!address && !!ROOCH_APP,
+    staleTime: 30000,
+    retry: 2,
+    retryDelay: 1000,
   });
 };

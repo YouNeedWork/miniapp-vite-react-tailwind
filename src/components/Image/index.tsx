@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { getImageUrl } from '../../utils/image';
 
 interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -14,22 +14,27 @@ export const Image: React.FC<ImageProps> = ({
   className = '', 
   ...props 
 }) => {
-  const [error, setError] = React.useState(false);
+  const [imageSrc, setImageSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImageSrc(src);
+    setHasError(false);
+  }, [src]);
 
   const handleError = () => {
-    if (!error && fallback !== src) {
-      setError(true);
+    if (!hasError && fallback !== imageSrc) {
+      setHasError(true);
+      setImageSrc(getImageUrl(fallback));
     }
   };
-
-  const imageSrc = error ? getImageUrl(fallback) : getImageUrl(src);
 
   return (
     <img
       src={imageSrc}
       alt={alt}
       onError={handleError}
-      className={`${className} ${error ? 'opacity-50' : ''}`}
+      className={`${className} ${hasError ? 'opacity-50' : ''}`}
       loading="lazy"
       {...props}
     />

@@ -1,27 +1,22 @@
 import { useCallback } from "react";
-import {
-  useCurrentSession,
-  useCurrentAddress,
-} from "@roochnetwork/rooch-sdk-kit";
-import {
-  RoochClient,
-  Transaction,
-  Args,
-  RoochAddress,
-} from "@roochnetwork/rooch-sdk";
+import { useCurrentSession, useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
+import { Transaction, Args, RoochAddress } from "@roochnetwork/rooch-sdk";
 import { PKG } from "@/constants/config";
 import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { APP_CONFIG } from "@/constants/config";
+import { createRoochClient } from "@/utils/rooch";
 import toast from "react-hot-toast";
 
-const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+const MINING_COOLDOWN = 1000; // 1 second cooldown
+let lastMiningTime = 0;
 
 export const useMintActions = () => {
   const address = useCurrentAddress();
   const sessionKey = useCurrentSession();
   const { data: mineInfo } = useMineInfo();
   const queryClient = useQueryClient();
+  const client = createRoochClient();
 
   const handleMine = useCallback(async () => {
     try {
@@ -30,10 +25,10 @@ export const useMintActions = () => {
         return false;
       }
 
-      // Check for auth token
-      const authToken = localStorage.getItem("auth_token");
-      if (!authToken) {
-        toast.error("Authentication required");
+      // Check mining cooldown
+      const now = Date.now();
+      if (now - lastMiningTime < MINING_COOLDOWN) {
+        toast.error("Please slow down! Mining too fast.");
         return false;
       }
 
@@ -45,7 +40,7 @@ export const useMintActions = () => {
           APP_CONFIG.maxInactiveInterval * 1000;
 
       if (!isSessionKeyValid) {
-        toast.error("Valid session key required");
+        toast.error("Session key required");
         return false;
       }
 
@@ -68,7 +63,17 @@ export const useMintActions = () => {
           ],
           typeArgs: [],
         });
+      } else if (mineInfo.type === "auto") {
+        // Handle auto mining
+        txn.callFunction({
+          address: PKG,
+          module: "gold_miner",
+          function: "auto_mine",
+          args: [],
+          typeArgs: [],
+        });
       } else {
+        // Handle manual mining
         txn.callFunction({
           address: PKG,
           module: "gold_miner",
@@ -84,34 +89,32 @@ export const useMintActions = () => {
       });
 
       if (result.execution_info.status.type === "executed") {
+        lastMiningTime = now;
         await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
-        toast.success("Mining successful!");
         return true;
       }
 
-      // Check for ABORTED status with code 1001
-      if (
-        result.execution_info.status.type === "moveabort" &&
-        result.execution_info.status.abort_code == "1001"
-      ) {
-        toast.error("Please slow down and take a break! Mining too fast.");
-        return false;
+      if (result.execution_info.status.type === "moveabort") {
+        if (result.execution_info.status.abort_code === 1001) {
+          toast.error("Please slow down and take a break! Mining too fast.");
+        } else {
+          toast.error(`Mining failed: Error ${result.execution_info.status.abort_code}`);
+        }
       }
 
       return false;
     } catch (error: any) {
       console.error("Mining error:", error);
 
-      // Check for ABORTED status in error object
-      if (error.status?.sub_status === 1001) {
+      if (error?.code === 1001 || error?.type === "SequenceNuberTooOld") {
         toast.error("Please slow down and take a break! Mining too fast.");
       } else {
-        toast.error("Mining failed: " + error.message);
+        toast.error(error?.message || "Mining failed. Please try again.");
       }
 
       return false;
     }
-  }, [address, sessionKey, mineInfo, queryClient]);
+  }, [address, sessionKey, mineInfo, queryClient, client]);
 
   return { handleMine };
 };

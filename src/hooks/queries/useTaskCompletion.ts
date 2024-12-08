@@ -1,39 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
 import { Args } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
-import { ROOCH_APP } from "@/constants/config";
+import { PKG } from "@/constants/config";
 import { createRoochClient } from "@/utils/rooch";
 
-export const VOTE_LEVEL_QUERY_KEY = ["voteLevel"] as const;
+export const TASK_COMPLETION_QUERY_KEY = ["taskCompletion"] as const;
 
-export const useVoteLevel = () => {
+export const useTaskCompletion = (taskId: number) => {
   const address = useCurrentAddress();
   const client = createRoochClient();
 
   return useQuery({
-    queryKey: [...VOTE_LEVEL_QUERY_KEY, address?.toStr()],
+    queryKey: [...TASK_COMPLETION_QUERY_KEY, address?.toStr(), taskId],
     queryFn: async () => {
-      if (!address) return 0;
+      if (!address) return false;
 
       try {
         const result = await client.executeViewFunction({
-          address: ROOCH_APP,
-          module: "grow_information_v3",
-          function: "get_vote",
+          address: PKG,
+          module: "tasks",
+          function: "is_task_completed",
           args: [
-            Args.string("goldminer"),
             Args.address(address),
+            Args.u64(BigInt(taskId))
           ],
           typeArgs: [],
         });
 
-        return Number(result.return_values?.[0]?.decoded_value || 0);
+        return !!result.return_values?.[0]?.decoded_value;
       } catch (error) {
-        console.error("Failed to fetch vote level:", error);
-        return 0;
+        console.error("Failed to fetch task completion:", error);
+        return false;
       }
     },
-    enabled: !!address && !!ROOCH_APP,
+    enabled: !!address,
     staleTime: 30000,
     retry: 2,
     retryDelay: 1000,
