@@ -57,6 +57,24 @@ export default function MintView() {
     }
   };
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (address && mineInfo?.type === "auto") {
+      // Set up interval to refresh balances every second for auto mining
+      intervalId = setInterval(() => {
+        handleRefresh();
+      }, 1000);
+    }
+
+    // Cleanup interval on unmount or when conditions change
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [address, mineInfo?.type]);
+
   const onStart = async () => {
     setIsStarting(true);
     try {
@@ -65,7 +83,6 @@ export default function MintView() {
     } finally {
       setIsStarting(false);
     }
-
     handleRefresh();
   };
 

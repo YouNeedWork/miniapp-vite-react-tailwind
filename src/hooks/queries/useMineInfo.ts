@@ -37,7 +37,11 @@ export function useMineInfo() {
         console.log("mineInfo", mineInfo);
         let id = objects[0].id;
         let type = "manual";
-        if (mineInfo.auto_miner.value.vec.length > 0) {
+        if (
+          mineInfo.auto_miner.value.vec &&
+          mineInfo.auto_miner.value.vec.value && 
+          mineInfo.auto_miner.value.vec.value.length > 0
+        ) {
           type = "auto";
         }
 
