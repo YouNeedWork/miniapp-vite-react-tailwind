@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useCurrentAddress, useCurrentWallet } from "@roochnetwork/rooch-sdk-kit";
 
 export default function MeView() {
@@ -27,7 +26,7 @@ export default function MeView() {
         </div>
       </div>
 
-      <div className=" flex flex-col gap-8  absolute bottom-[70px]  w-screen h-[491px] bg-[#fdeeba] rounded-[20px] border border-black px-[20px] pt-[32px]">
+      <div className="flex flex-col gap-8 absolute bottom-[70px] w-screen h-[491px] bg-[#fdeeba] rounded-[20px] border border-black px-[20px] pt-[32px]">
         <div className="flex justify-between items-center cursor-pointer" onClick={handleDisconnect}>
           <div className="flex gap-2 items-center">
             <img
@@ -45,6 +44,7 @@ export default function MeView() {
             alt=""
           />
         </div>
+        {/* Commented out My Orders
         <div className="flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <img
@@ -62,6 +62,8 @@ export default function MeView() {
             alt=""
           />
         </div>
+        */}
+        {/* Commented out Account Management
         <div className="flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <img
@@ -79,6 +81,8 @@ export default function MeView() {
             alt=""
           />
         </div>
+        */}
+        {/* Commented out Language
         <div className="flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <img
@@ -96,6 +100,7 @@ export default function MeView() {
             alt=""
           />
         </div>
+        */}
       </div>
     </div>
   );

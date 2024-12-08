@@ -6,6 +6,7 @@ export interface Task {
   iconBgColor: string;
   reward: number;
   completed: boolean;
+  buttonText?: string;
   onAction: () => void;
 }
 

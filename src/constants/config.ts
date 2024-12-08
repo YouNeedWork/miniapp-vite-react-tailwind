@@ -1,6 +1,7 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 export const PKG = import.meta.env.VITE_PKG as string;
 export const GOLD_TREATURY = import.meta.env.VITE_GOLD_TREATURY as string;
+export const ROOCH_APP = import.meta.env.ROOCH_APP as string;
 
 export const APP_CONFIG = {
   name: 'Gold Miner',

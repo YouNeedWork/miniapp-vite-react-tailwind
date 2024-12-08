@@ -60,10 +60,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         size="sm"
         rounded="full"
         className="px-[46px]"
-        disabled={task.completed}
+        disabled={task.completed && !task.buttonText}
         onClick={task.onAction}
       >
-        {task.completed ? "Done" : "Go"}
+        {task.buttonText || (task.completed ? "Done" : "Go")}
       </Button>
     </div>
   );
