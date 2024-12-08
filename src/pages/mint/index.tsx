@@ -40,6 +40,12 @@ export default function MintView() {
     }
   };
 
+  useEffect(() => {
+    if (address) {
+      handleRefresh();
+    }
+  }, []);
+
   const handleRefresh = () => {
     refetchGoldBalance();
     refetchRgasBalance();
