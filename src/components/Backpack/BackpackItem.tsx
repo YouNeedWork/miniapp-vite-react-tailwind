@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import type { BackpackItemType } from '@/hooks/useBackpackItems';
+import { ITEM_TYPES, type BackpackItemType } from '@/hooks/useBackpackItems';
 
 interface BackpackItemProps {
   item: BackpackItemType;
@@ -14,7 +14,7 @@ export const BackpackItem: React.FC<BackpackItemProps> = ({
   onEat,
   onToggleEquip
 }) => {
-  const isHamburger = item.type === 'HAMBURGER';
+  const isHamburger = item.type === ITEM_TYPES.HAMBURGER;
   const hasQuantity = item.quantity > 0;
 
   return (

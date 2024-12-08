@@ -1,5 +1,8 @@
 import { useCallback } from "react";
-import { useCurrentSession, useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
+import {
+  useCurrentSession,
+  useCurrentAddress,
+} from "@roochnetwork/rooch-sdk-kit";
 import { Transaction, Args, RoochAddress } from "@roochnetwork/rooch-sdk";
 import { PKG } from "@/constants/config";
 import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
@@ -95,10 +98,12 @@ export const useMintActions = () => {
       }
 
       if (result.execution_info.status.type === "moveabort") {
-        if (result.execution_info.status.abort_code === 1001) {
+        if (result.execution_info.status.abort_code == "1001") {
           toast.error("Please slow down and take a break! Mining too fast.");
         } else {
-          toast.error(`Mining failed: Error ${result.execution_info.status.abort_code}`);
+          toast.error(
+            `Mining failed: Error ${result.execution_info.status.abort_code}`
+          );
         }
       }
 

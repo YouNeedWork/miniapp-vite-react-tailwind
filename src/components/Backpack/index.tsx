@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { BackpackItem } from './BackpackItem';
-import { BackpackItemType, useBackpackItems } from '@/hooks/useBackpackItems';
+import { BackpackItemType, ITEM_TYPES, useBackpackItems } from '@/hooks/useBackpackItems';
 import { useEatHamburger } from '@/hooks/useEatHamburger';
+import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
+import { createRoochClient } from '@/utils/rooch';
 
 interface BackpackProps {
   isOpen: boolean;
@@ -12,6 +14,8 @@ interface BackpackProps {
 export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
   const { data: items = [], refetch } = useBackpackItems();
   const { eatHamburger } = useEatHamburger();
+  const address = useCurrentAddress();
+  const client = createRoochClient();
 
   useEffect(() => {
     if (isOpen) {
@@ -21,7 +25,23 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
 
   const handleEat = async () => {
     try {
-      const success = await eatHamburger();
+      const hamburgerItem = items.find(item => item.type === ITEM_TYPES.HAMBURGER);
+      if (!hamburgerItem || hamburgerItem.quantity === 0) {
+        throw new Error("No hamburger available");
+      }
+      const objects = await client.queryObjectStates({
+        filter: {
+          object_type_with_owner: {
+            object_type: ITEM_TYPES.HAMBURGER,
+            owner: address!.toStr(),
+          },
+        },
+      });
+      if (!objects.data.length) {
+        throw new Error('No hamburger object found');
+      }
+      const objectId = objects.data[0].id;
+      const success = await eatHamburger(objectId);
       if (success) {
         await refetch();
       }
@@ -46,7 +66,7 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
           <BackpackItem
             key={item.id}
             item={item}
-            onEat={item.type === 'HAMBURGER' ? handleEat : undefined}
+            onEat={() => handleEat()}
             onToggleEquip={item.isCard ? handleToggleEquip : undefined}
           />
         ))}
