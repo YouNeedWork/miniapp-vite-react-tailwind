@@ -4,9 +4,12 @@ import { MiningAnimation } from '@/components/MiningAnimation';
 import { useMiningEffects } from '@/hooks/useMiningEffects';
 import { cn } from '@/lib/utils';
 import { buttonStyles } from './styles';
+import { useMineInfo } from '@/hooks/queries/useMineInfo';
+import { useAutoMiningRate } from '@/hooks/queries/useAutoMiningRate';
 
 interface ActionsProps {
   mine: () => Promise<boolean>;
+  autoMine: () => Promise<boolean>;
   hunger: string;
   onOpenBackpack: () => void;
   onOpenShop: () => void;
@@ -16,22 +19,32 @@ interface ActionsProps {
 export const Actions: React.FC<ActionsProps> = ({
   mine,
   hunger,
+  autoMine,
   onOpenBackpack,
   onOpenShop,
   onRefresh
 }) => {
   const { isAnimating, playMiningEffect } = useMiningEffects();
+  const { data: mineInfo } = useMineInfo();
+  const { data: autoMiningAmount = 0 } = useAutoMiningRate();
+  const isAutoMining = mineInfo?.type === 'auto';
 
   const handleMineClick = async () => {
     try {
-      playMiningEffect();
-      const success = await mine();
-      if (!success) {
-        // Handle mining failure
+      if (isAutoMining) {
+        playMiningEffect();
+        const success = await autoMine();
+        if (success) {
+          onRefresh?.();
+        }
       } else {
-        onRefresh?.();
+        playMiningEffect();
+
+        const success = await mine();
+        if (success) {
+          onRefresh?.();
+        }
       }
-      // Refresh data after mining
     } catch (error) {
       console.error('Mining failed:', error);
     }
@@ -62,18 +75,29 @@ export const Actions: React.FC<ActionsProps> = ({
             onClick={handleMineClick}
             className={cn(
               buttonStyles.mining,
-              "w-[80px] h-[80px] md:w-[120px] md:h-[120px] lg:w-[160px] lg:h-[160px]"
+              "w-[80px] h-[80px] md:w-[120px] md:h-[120px] lg:w-[160px] lg:h-[160px]",
+              isAutoMining && "bg-gradient-to-b from-[#67d488] to-[#4fb36a]"
             )}
           >
-            <img
-              src="/imgs/mint/mint_icon_1.png"
-              alt="Mine"
-              className={cn(
-                "w-[50px] h-[50px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px]",
-                "transition-transform duration-200",
-                isAnimating && "animate-bounce"
-              )}
-            />
+            {isAutoMining ? (
+              <div className="flex flex-col items-center justify-center">
+                <img
+                  src="/imgs/mint.png"
+                  alt="Auto Mining"
+                  className="w-[40px] h-[40px] md:w-[60px] md:h-[60px] lg:w-[80px] lg:h-[80px]"
+                />
+              </div>
+            ) : (
+              <img
+                src="/imgs/mint/mint_icon_1.png"
+                alt="Mine"
+                className={cn(
+                  "w-[50px] h-[50px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px]",
+                  "transition-transform duration-200",
+                  isAnimating && "animate-bounce"
+                )}
+              />
+            )}
             <MiningAnimation
               isActive={isAnimating}
               className="absolute inset-0"
@@ -85,7 +109,7 @@ export const Actions: React.FC<ActionsProps> = ({
             buttonStyles.hunger,
             "text-sm md:text-base lg:text-lg"
           )}>
-            {hunger}
+            {isAutoMining ? (autoMiningAmount / 1e6) : hunger}
           </div>
         </div>
 

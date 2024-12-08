@@ -98,8 +98,8 @@ export default function EarnView() {
       createTask(
         "6",
         `Vote Level ${voteLevel} (${currentVoteTask.requiredVotes.toLocaleString()} votes)`,
-        "/imgs/task_5.png",
-        TASK_COLORS.pink,
+        "/imgs/task_1.png",
+        TASK_COLORS.green,
         currentVoteTask.reward,
         voteLevel > 0,
         voteLevel > 0 ? "Claim" : "Go",
@@ -110,7 +110,7 @@ export default function EarnView() {
         "Bind Twitter Account",
         "/imgs/task_3.png",
         TASK_COLORS.green,
-        10000,
+        100000,
         hasValidTwitterId,
         hasValidTwitterId ? !twitterTaskClaimed ? "Claim" : "Done" : "GO",
         handleTwitterAction

@@ -14,6 +14,7 @@ import { PKG } from "@/constants/config";
 import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { APP_CONFIG } from "@/constants/config";
+import { toast } from "react-hot-toast";
 
 const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
 
@@ -36,38 +37,19 @@ export const useMintActions = () => {
           APP_CONFIG.maxInactiveInterval * 1000;
 
       if (!isSessionKeyValid) {
-        alert("Session key is invalid");
+        toast.error("Session key is invalid");
         return false;
       }
 
       const txn = new Transaction();
 
-      if (!mineInfo) {
-        const inviter = localStorage.getItem("inviter");
-        txn.callFunction({
-          address: PKG,
-          module: "gold_miner",
-          function: "start",
-          args: [
-            inviter === null
-              ? Args.address(
-                  new RoochAddress(
-                    "0x0000000000000000000000000000000000000000000000000000000000000000"
-                  ).toStr()
-                )
-              : Args.address(inviter),
-          ],
-          typeArgs: [],
-        });
-      } else {
-        txn.callFunction({
-          address: PKG,
-          module: "gold_miner",
-          function: "mine",
-          args: [],
-          typeArgs: [],
-        });
-      }
+      txn.callFunction({
+        address: PKG,
+        module: "gold_miner",
+        function: "mine",
+        args: [],
+        typeArgs: [],
+      });
 
       const result = await client.signAndExecuteTransaction({
         transaction: txn,
@@ -86,5 +68,99 @@ export const useMintActions = () => {
     }
   }, [address, sessionKey, mineInfo, queryClient]);
 
-  return { handleMine };
+  const handleAutoMine = useCallback(async () => {
+    try {
+      if (!address) return false;
+
+      // Check if we have a valid session key
+      const isSessionKeyValid =
+        sessionKey &&
+        sessionKey.getCreateTime() !== null &&
+        Date.now() - sessionKey.getCreateTime() <=
+          APP_CONFIG.maxInactiveInterval * 1000;
+
+      if (!isSessionKeyValid) {
+        toast.error("Session key is invalid");
+        return false;
+      }
+
+      const txn = new Transaction();
+
+      txn.callFunction({
+        address: PKG,
+        module: "gold_miner",
+        function: "auto_mine",
+        args: [],
+        typeArgs: [],
+      });
+
+      const result = await client.signAndExecuteTransaction({
+        transaction: txn,
+        signer: sessionKey,
+      });
+
+      if (result.execution_info.status.type === "executed") {
+        await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Mining error:", error);
+      return false;
+    }
+  }, [address, sessionKey, mineInfo, queryClient]);
+
+  const handleStart = useCallback(async () => {
+    try {
+      if (!address) return false;
+
+      // Check if we have a valid session key
+      const isSessionKeyValid =
+        sessionKey &&
+        sessionKey.getCreateTime() !== null &&
+        Date.now() - sessionKey.getCreateTime() <=
+          APP_CONFIG.maxInactiveInterval * 1000;
+
+      if (!isSessionKeyValid) {
+        toast.error("Session key is invalid");
+        return false;
+      }
+      const inviter = localStorage.getItem("inviter");
+      const txn = new Transaction();
+
+      txn.callFunction({
+        address: PKG,
+        module: "gold_miner",
+        function: "start",
+        args: [
+          inviter === null
+            ? Args.address(
+                new RoochAddress(
+                  "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ).toStr()
+              )
+            : Args.address(inviter),
+        ],
+        typeArgs: [],
+      });
+
+      const result = await client.signAndExecuteTransaction({
+        transaction: txn,
+        signer: sessionKey,
+      });
+
+      if (result.execution_info.status.type === "executed") {
+        await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Mining error:", error);
+      return false;
+    }
+  }, [address]);
+
+  return { handleMine, handleAutoMine, handleStart };
 };

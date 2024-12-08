@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Wallet from '@/components/Wallet';
-import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
+import { useCurrentAddress, useCurrentSession } from '@roochnetwork/rooch-sdk-kit';
 import { Actions } from './components/Actions';
 import { useMintActions } from './hooks/useMintActions';
 import { useBalances } from './hooks/useBalances';
@@ -12,14 +12,19 @@ import { SessionKeyModal } from '@/components/SessionKeyModal';
 import { useSessionKeyCheck } from '@/hooks/useSessionKeyCheck';
 import { WelcomeDialog } from '@/components/WelcomeDialog';
 import { useMineInfo } from '@/hooks/queries/useMineInfo';
+import { useAutoMiningRate } from '@/hooks/queries/useAutoMiningRate';
+import { DailyCheckIn } from '@/components/DailyCheckIn';
 
 export default function MintView() {
   const address = useCurrentAddress();
-  const { handleMine } = useMintActions();
+  const sessionKey = useCurrentSession();
+
+  const { handleMine, handleAutoMine, handleStart } = useMintActions();
   const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
   const { hunger, refetchHunger } = useHunger();
   const { showModal: showSessionKeyModal, setShowModal: setShowSessionKeyModal, handleCreateSessionKey, isCreating, hasGas } = useSessionKeyCheck();
   const { data: mineInfo } = useMineInfo();
+  const { refetch: refetchAutoMiningRate } = useAutoMiningRate();
 
   const [isBackpackOpen, setIsBackpackOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
@@ -34,23 +39,28 @@ export default function MintView() {
 
   // Show welcome dialog only after session key is created
   useEffect(() => {
-    if (address && !showSessionKeyModal && !mineInfo) {
+    if (address && !showSessionKeyModal && mineInfo?.id === "" && hasGas) {
       setShowWelcome(true);
     } else {
       setShowWelcome(false);
     }
-  }, [address, showSessionKeyModal, mineInfo]);
+  }, [address, showSessionKeyModal, mineInfo, hasGas]);
 
   const handleRefresh = () => {
     refetchGoldBalance();
     refetchRgasBalance();
-    refetchHunger();
+
+    if (mineInfo?.type === "auto") {
+      refetchAutoMiningRate();
+    } else {
+      refetchHunger();
+    }
   };
 
-  const handleStart = async () => {
+  const onStart = async () => {
     setIsStarting(true);
     try {
-      await handleMine();
+      await handleStart();
       setShowWelcome(false);
     } finally {
       setIsStarting(false);
@@ -109,6 +119,7 @@ export default function MintView() {
         <>
           <Actions
             mine={handleMine}
+            autoMine={handleAutoMine}
             hunger={String(hunger)}
             onOpenBackpack={() => setIsBackpackOpen(true)}
             onOpenShop={() => setIsShopOpen(true)}
@@ -124,9 +135,10 @@ export default function MintView() {
           <WelcomeDialog
             isOpen={showWelcome}
             onClose={() => setShowWelcome(false)}
-            onStart={handleStart}
+            onStart={onStart}
             isStarting={isStarting}
           />
+          {hasGas && mineInfo && sessionKey && <DailyCheckIn />}
         </>
       ) : (
         <Wallet />
