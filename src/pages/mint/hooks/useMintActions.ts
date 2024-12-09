@@ -15,8 +15,12 @@ import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { APP_CONFIG } from "@/constants/config";
 import { toast } from "react-hot-toast";
+import { createRoochClient } from "@/utils/rooch";
 
-const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+const MINING_COOLDOWN = 1000; // 1 second cooldown
+let lastMiningTime = 0;
+
+let client = createRoochClient();
 
 export const useMintActions = () => {
   const address = useCurrentAddress();
@@ -28,6 +32,13 @@ export const useMintActions = () => {
   const handleMine = useCallback(async () => {
     try {
       if (!address) return false;
+
+      // Check mining cooldown
+      const now = Date.now();
+      if (now - lastMiningTime < MINING_COOLDOWN) {
+        toast.error("Please slow down! Mining too fast.");
+        return false;
+      }
 
       // Check if we have a valid session key
       const isSessionKeyValid =
@@ -62,8 +73,20 @@ export const useMintActions = () => {
       }
 
       return false;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Mining error:", error);
+      if (error?.code === 1004 || error?.message?.includes("1004")) {
+        toast.error("You don't have enough RGas");
+        return false;
+      }
+
+      if (error?.code === 1001 || error?.message.includes("1001")) {
+        toast.error("Please slow down and take a break! Mining too fast.");
+        return;
+      } else {
+        toast.error(error?.message || "Mining failed. Please try again.");
+      }
+
       return false;
     }
   }, [address, sessionKey, mineInfo, queryClient]);
@@ -71,6 +94,13 @@ export const useMintActions = () => {
   const handleAutoMine = useCallback(async () => {
     try {
       if (!address) return false;
+
+      // Check mining cooldown
+      const now = Date.now();
+      if (now - lastMiningTime < MINING_COOLDOWN) {
+        toast.error("Please slow down! Mining too fast.");
+        return false;
+      }
 
       // Check if we have a valid session key
       const isSessionKeyValid =
@@ -105,8 +135,22 @@ export const useMintActions = () => {
       }
 
       return false;
-    } catch (error) {
-      console.error("Mining error:", error);
+    } catch (error: any) {
+
+      if (error?.code === 1004 || error?.message?.includes("1004")) {
+        toast.error("You don't have enough RGas");
+        return false;
+      }
+
+      if (error?.code === 1001 || error?.message.includes("1001")) {
+        toast.error("Please slow down and take a break! Mining too fast.");
+        return;
+      } else {
+        toast.error(error?.message || "Mining failed. Please try again.");
+      }
+
+
+
       return false;
     }
   }, [address, sessionKey, mineInfo, queryClient]);
@@ -114,6 +158,13 @@ export const useMintActions = () => {
   const handleStart = useCallback(async () => {
     try {
       if (!address) return false;
+
+      // Check mining cooldown
+      const now = Date.now();
+      if (now - lastMiningTime < MINING_COOLDOWN) {
+        toast.error("Please slow down! Mining too fast.");
+        return false;
+      }
 
       // Check if we have a valid session key
       const isSessionKeyValid =
