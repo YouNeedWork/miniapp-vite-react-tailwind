@@ -86,6 +86,10 @@ export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
           error = "Insufficient $GOLD balance";
         } else if (error == 5) {
           error = "Invalid miner type";
+        } else if (error == 1) {
+          error = "Unable to purchase miner";
+        } else if (error == 100008) {
+          error = "Already have a miner";
         }
 
         toast.error(error);
