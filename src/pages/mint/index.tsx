@@ -6,6 +6,7 @@ import { useMintActions } from './hooks/useMintActions';
 import { useBalances } from './hooks/useBalances';
 import { useHunger } from './hooks/useHunger';
 import { AudioControl } from '@/components/AudioControl';
+import { BoostRateButton } from '@/components/BoostRateButton';
 import { Backpack } from '@/components/Backpack';
 import { Shop } from '@/components/Shop';
 import { SessionKeyModal } from '@/components/SessionKeyModal';
@@ -93,12 +94,13 @@ export default function MintView() {
   const shouldShowDailyCheckIn = hasGas && mineInfo && isSessionKeyValid;
 
   return (
-<div
+    <div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover 
         pt-[60px] md:pt-[80px] lg:pt-[100px] relative"
       style={{ backgroundImage: "url('/imgs/mint/bg.png')" }}
     >
       <AudioControl className="absolute top-4 right-4 z-50" />
+      <BoostRateButton className="absolute top-4 left-4 z-50" />
 
       <div className="w-full h-[90px] md:h-[120px] lg:h-[160px] flex items-center justify-center">
         <div
