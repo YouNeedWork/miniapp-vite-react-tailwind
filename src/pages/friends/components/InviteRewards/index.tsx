@@ -20,7 +20,7 @@ export const InviteRewards: React.FC = () => {
         <div className="bg-[#fdeeba] rounded-xl p-4 space-y-4">
           <div className="text-center">
             <p className="text-sm font-medium text-gray-600">Your Invite Code</p>
-            <p className="text-lg font-bold">{inviteCode}</p>
+            <p className="text-lg font-bold">{inviteCode.slice(0, 8)}</p>
           </div>
 
           <Button
@@ -36,7 +36,7 @@ export const InviteRewards: React.FC = () => {
 
         <div className="text-center text-sm text-gray-600">
           <p>For every friend that plays,</p>
-          <p>you both get <span className="text-[#777cd9] font-medium">+100 Gold!</span></p>
+          <p>you both get <span className="text-[#777cd9] font-medium">+100 Gold!</span> and  <span className="text-[#777cd9] font-medium">15%</span> of their rewards!</p>
         </div>
       </div>
     </div>
