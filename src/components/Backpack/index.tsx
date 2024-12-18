@@ -5,6 +5,7 @@ import { BackpackItemType, ITEM_TYPES, useBackpackItems } from '@/hooks/useBackp
 import { useEatHamburger } from '@/hooks/useEatHamburger';
 import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
 import { createRoochClient } from '@/utils/rooch';
+import { useHunger } from '@/hooks/queries/useHunger';
 
 interface BackpackProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface BackpackProps {
 export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
   const { data: items = [], refetch } = useBackpackItems();
   const { eatHamburger } = useEatHamburger();
+  const { refetchHunger } = useHunger();
   const address = useCurrentAddress();
   const client = createRoochClient();
 
@@ -44,6 +46,7 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
       const success = await eatHamburger(objectId);
       if (success) {
         await refetch();
+        await refetchHunger(); // Refresh hunger after eating
       }
     } catch (error) {
       console.error('Failed to eat hamburger:', error);

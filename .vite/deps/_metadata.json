@@ -1,8 +1,64 @@
 {
-  "hash": "c6109692",
+  "hash": "d170630c",
   "configHash": "812ca897",
-  "lockfileHash": "e3b0c442",
-  "browserHash": "c669616d",
-  "optimized": {},
-  "chunks": {}
+  "lockfileHash": "41f0ee22",
+  "browserHash": "03769f9f",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/.pnpm/react@18.3.1/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "06718c61",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/.pnpm/react@18.3.1/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "7587c92b",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "6fca846c",
+      "needsInterop": true
+    },
+    "@roochnetwork/rooch-sdk-kit": {
+      "src": "../../node_modules/.pnpm/@roochnetwork+rooch-sdk-kit@0.2.7_@tanstack+react-query@5.59.20_react@18.3.1__@types+react@18_x5qqh6vsf7o6f74axd3c32weji/node_modules/@roochnetwork/rooch-sdk-kit/dist/esm/index.js",
+      "file": "@roochnetwork_rooch-sdk-kit.js",
+      "fileHash": "20fb427c",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/.pnpm/@tanstack+react-query@5.59.20_react@18.3.1/node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "6cc1afe2",
+      "needsInterop": false
+    },
+    "react-hot-toast": {
+      "src": "../../node_modules/.pnpm/react-hot-toast@2.4.1_csstype@3.1.3_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/react-hot-toast/dist/index.mjs",
+      "file": "react-hot-toast.js",
+      "fileHash": "16367713",
+      "needsInterop": false
+    },
+    "@roochnetwork/rooch-sdk": {
+      "src": "../../node_modules/.pnpm/@roochnetwork+rooch-sdk@0.2.7_typescript@5.7.2/node_modules/@roochnetwork/rooch-sdk/dist/esm/index.js",
+      "file": "@roochnetwork_rooch-sdk.js",
+      "fileHash": "5789f693",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-NQME7A3X": {
+      "file": "chunk-NQME7A3X.js"
+    },
+    "chunk-H3PZ5NGW": {
+      "file": "chunk-H3PZ5NGW.js"
+    },
+    "chunk-ONUP7KAW": {
+      "file": "chunk-ONUP7KAW.js"
+    },
+    "chunk-RDKGUBC5": {
+      "file": "chunk-RDKGUBC5.js"
+    }
+  }
 }

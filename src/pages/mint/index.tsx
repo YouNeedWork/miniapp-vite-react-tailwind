@@ -14,11 +14,11 @@ import { WelcomeDialog } from '@/components/WelcomeDialog';
 import { useMineInfo } from '@/hooks/queries/useMineInfo';
 import { useAutoMiningRate } from '@/hooks/queries/useAutoMiningRate';
 import { DailyCheckIn } from '@/components/DailyCheckIn';
+import { APP_CONFIG } from '@/constants/config';
 
 export default function MintView() {
   const address = useCurrentAddress();
   const sessionKey = useCurrentSession();
-
   const { handleMine, handleAutoMine, handleStart } = useMintActions();
   const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
   const { hunger, refetchHunger } = useHunger();
@@ -31,20 +31,25 @@ export default function MintView() {
   const [isStarting, setIsStarting] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
 
+  // Check if session key is valid
+  const isSessionKeyValid = sessionKey && 
+    sessionKey.getCreateTime() !== null && 
+    Date.now() - sessionKey.getCreateTime() <= APP_CONFIG.maxInactiveInterval * 1000;
+
   useEffect(() => {
     if (address) {
       handleRefresh();
     }
   }, [address]);
 
-  // Show welcome dialog only after session key is created
+  // Show welcome dialog only after session key is created and valid
   useEffect(() => {
-    if (address && !showSessionKeyModal && mineInfo?.id === "" && hasGas) {
+    if (address && !showSessionKeyModal && mineInfo?.id === "" && hasGas && isSessionKeyValid) {
       setShowWelcome(true);
     } else {
       setShowWelcome(false);
     }
-  }, [address, showSessionKeyModal, mineInfo, hasGas]);
+  }, [address, showSessionKeyModal, mineInfo, hasGas, isSessionKeyValid]);
 
   const handleRefresh = () => {
     refetchGoldBalance();
@@ -61,13 +66,11 @@ export default function MintView() {
     let intervalId: NodeJS.Timeout;
 
     if (address && mineInfo?.type === "auto") {
-      // Set up interval to refresh balances every second for auto mining
       intervalId = setInterval(() => {
         handleRefresh();
       }, 1000);
     }
 
-    // Cleanup interval on unmount or when conditions change
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
@@ -86,8 +89,11 @@ export default function MintView() {
     handleRefresh();
   };
 
+  // Determine if we should show the DailyCheckIn
+  const shouldShowDailyCheckIn = hasGas && mineInfo && isSessionKeyValid;
+
   return (
-    <div
+<div
       className="w-screen h-screen bg-center bg-no-repeat bg-cover 
         pt-[60px] md:pt-[80px] lg:pt-[100px] relative"
       style={{ backgroundImage: "url('/imgs/mint/bg.png')" }}
@@ -142,6 +148,8 @@ export default function MintView() {
             onOpenShop={() => setIsShopOpen(true)}
             onRefresh={handleRefresh}
           />
+          
+          {/* Modals - Order is important */}
           <SessionKeyModal
             isOpen={showSessionKeyModal}
             onClose={() => setShowSessionKeyModal(false)}
@@ -149,13 +157,18 @@ export default function MintView() {
             isCreating={isCreating}
             hasGas={hasGas}
           />
-          <WelcomeDialog
-            isOpen={showWelcome}
-            onClose={() => setShowWelcome(false)}
-            onStart={onStart}
-            isStarting={isStarting}
-          />
-          {hasGas && mineInfo && sessionKey && <DailyCheckIn />}
+          
+          {!showSessionKeyModal && (
+            <>
+              <WelcomeDialog
+                isOpen={showWelcome}
+                onClose={() => setShowWelcome(false)}
+                onStart={onStart}
+                isStarting={isStarting}
+              />
+              {shouldShowDailyCheckIn && <DailyCheckIn />}
+            </>
+          )}
         </>
       ) : (
         <Wallet />

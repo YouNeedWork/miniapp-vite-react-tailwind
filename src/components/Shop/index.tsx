@@ -1,28 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/Modal';
 import { ShopItemCard } from './ShopItem';
 import { SHOP_ITEMS, type ShopItem } from './types';
 import { shopStyles } from '@/components/ui/Modal/styles';
-
-import { useCallback } from "react";
-import {
-  useCurrentSession,
-  useCurrentAddress,
-  useCreateSessionKey,
-} from "@roochnetwork/rooch-sdk-kit";
-import {
-  RoochClient,
-  Transaction,
-  Args,
-  RoochAddress,
-} from "@roochnetwork/rooch-sdk";
+import { useMineInfo } from '@/hooks/queries/useMineInfo';
+import { useCurrentSession, useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
+import { Transaction, Args } from "@roochnetwork/rooch-sdk";
 import { PKG } from "@/constants/config";
-import { useMineInfo, MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
+import { MINE_INFO_QUERY_KEY } from "@/hooks/queries/useMineInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
+import { createRoochClient } from "@/utils/rooch";
 
-const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
-
+const client = createRoochClient();
 
 interface ShopProps {
   isOpen: boolean;
@@ -30,18 +21,20 @@ interface ShopProps {
 }
 
 export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const address = useCurrentAddress();
   const sessionKey = useCurrentSession();
   const queryClient = useQueryClient();
-  const { mutateAsync: createSessionKey } = useCreateSessionKey();
-
+  const { data: mineInfo } = useMineInfo();
+  const hasAutoMiner = mineInfo?.type === 'auto';
 
   const handleRent = async (item: ShopItem, days: number) => {
-    console.log(`Renting ${item.name} for ${days} days`);
-    // TODO: Implement rental logic
+    if (hasAutoMiner) {
+      toast.error(t('shop.alreadyOwnedError'));
+      return;
+    }
 
     try {
-
       let duration = 0;
       if (days === 3) {
         duration = 259200;
@@ -51,13 +44,13 @@ export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
         duration = 1814400;
       }
 
-      let ty = 1
+      let ty = 1;
       if (item.type === "manual") {
         ty = 1;
       } else if (item.type === "hydro") {
-        ty = 2
+        ty = 2;
       } else if (item.type === "electric") {
-        ty = 3
+        ty = 3;
       }
 
       const txn = new Transaction();
@@ -79,45 +72,44 @@ export const Shop: React.FC<ShopProps> = ({ isOpen, onClose }) => {
 
       if (result.output.status.type === "success") {
         await queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY });
+        toast.success(t('shop.rentSuccess'));
+        onClose();
         return true;
       } else {
         let error = result.output.status.abort_code;
         if (error == 4) {
-          error = "Insufficient $GOLD balance";
+          error = t('shop.errors.insufficientGold');
         } else if (error == 5) {
-          error = "Invalid miner type";
+          error = t('shop.errors.invalidMiner');
         } else if (error == 1) {
-          error = "Unable to purchase miner";
+          error = t('shop.errors.purchaseFailed');
         } else if (error == 100008) {
-          error = "Already have a miner";
+          error = t('shop.errors.alreadyOwned');
         }
 
         toast.error(error);
         return false;
       }
-
     } catch (error) {
       console.error("Purchase miner error:", error);
+      toast.error(t('shop.errors.generic'));
       return false;
     }
   };
 
-
-  const handleContentClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <Modal
-      title="Mining Machines Shop"
+      title={t('shop.title')}
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className={shopStyles.container} onClick={handleContentClick}>
+      <div className={shopStyles.container}>
         <div className={shopStyles.content}>
           <div className="mb-4 text-center">
             <p className="text-sm font-medium text-gray-600">
-              Rent mining machines to increase your mining efficiency
+              {hasAutoMiner 
+                ? t('shop.alreadyOwnedMessage')
+                : t('shop.description')}
             </p>
           </div>
 

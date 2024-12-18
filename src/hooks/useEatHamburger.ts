@@ -4,6 +4,7 @@ import { useCurrentSession } from "@roochnetwork/rooch-sdk-kit";
 import { PKG } from "@/constants/config";
 import { useQueryClient } from "@tanstack/react-query";
 import { MINE_INFO_QUERY_KEY } from "./queries/useMineInfo";
+import { HUNGER_QUERY_KEY } from "./queries/useHunger";
 import { useTransaction } from "./useTransaction";
 import toast from "react-hot-toast";
 
@@ -33,9 +34,11 @@ export const useEatHamburger = () => {
           showSuccessToast: false,
           showErrorToast: false,
           onSuccess: async () => {
-            await queryClient.invalidateQueries({
-              queryKey: MINE_INFO_QUERY_KEY,
-            });
+            // Invalidate both mine info and hunger queries
+            await Promise.all([
+              queryClient.invalidateQueries({ queryKey: MINE_INFO_QUERY_KEY }),
+              queryClient.invalidateQueries({ queryKey: HUNGER_QUERY_KEY })
+            ]);
             toast.success("Hamburger eaten successfully!");
           },
           onError: (error) => {

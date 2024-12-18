@@ -1,0 +1,66 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "confirm": "确认",
+    "cancel": "取消",
+    "close": "关闭",
+    "back": "返回",
+    "clicksPerSecond": "次/秒"
+  },
+  "nav": {
+    "mine": "挖矿",
+    "earn": "赚取",
+    "friends": "好友",
+    "me": "我的"
+  },
+  "me": {
+    "disconnect": "断开连接",
+    "myOrders": "我的订单",
+    "accountManagement": "账户管理",
+    "language": "语言",
+    "selectLanguage": "选择语言"
+  },
+  "mining": {
+    "rentMiner": "租用矿机",
+    "claimRewards": "领取奖励",
+    "dailyCheckIn": "每日签到",
+    "hunger": "体力",
+    "autoMining": "自动挖矿",
+    "manualMining": "手动挖矿",
+    "claimableAmount": "可领取数量"
+  },
+  "shop": {
+    "title": "矿机商店",
+    "description": "租用矿机提高挖矿效率",
+    "alreadyOwned": "已拥有",
+    "alreadyOwnedMessage": "您已拥有自动矿机",
+    "alreadyOwnedError": "您已拥有自动矿机",
+    "rentNow": "立即租用",
+    "rentSuccess": "成功租用矿机！",
+    "days": "天",
+    "clicksPerSecond": "次/秒",
+    "items": {
+      "manual": {
+        "name": "手动矿机",
+        "description": "基础矿机，3次/秒"
+      },
+      "hydro": {
+        "name": "水力矿机",
+        "description": "进阶矿机，5次/秒"
+      },
+      "electric": {
+        "name": "电力矿机",
+        "description": "高级矿机，10次/秒"
+      }
+    },
+    "errors": {
+      "insufficientGold": "$GOLD余额不足",
+      "invalidMiner": "无效的矿机类型",
+      "purchaseFailed": "无法购买矿机",
+      "alreadyOwned": "已拥有矿机",
+      "generic": "租用矿机失败，请重试"
+    }
+  }
+}

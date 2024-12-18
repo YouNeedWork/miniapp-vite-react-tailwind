@@ -1,0 +1,66 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "clicksPerSecond": "clicks/s"
+  },
+  "nav": {
+    "mine": "Mine",
+    "earn": "Earn",
+    "friends": "Friends",
+    "me": "Me"
+  },
+  "me": {
+    "disconnect": "Disconnect",
+    "myOrders": "My Orders",
+    "accountManagement": "Account Management",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "mining": {
+    "rentMiner": "Rent Miner",
+    "claimRewards": "Claim Rewards",
+    "dailyCheckIn": "Daily Check-in",
+    "hunger": "Hunger",
+    "autoMining": "Auto Mining",
+    "manualMining": "Manual Mining",
+    "claimableAmount": "Claimable Amount"
+  },
+  "shop": {
+    "title": "Mining Machines Shop",
+    "description": "Rent mining machines to increase your mining efficiency",
+    "alreadyOwned": "Already Owned",
+    "alreadyOwnedMessage": "You already have an auto miner",
+    "alreadyOwnedError": "You already have an auto miner",
+    "rentNow": "Rent Now",
+    "rentSuccess": "Successfully rented miner!",
+    "days": "days",
+    "clicksPerSecond": "clicks/s",
+    "items": {
+      "manual": {
+        "name": "Manual Miner",
+        "description": "Basic mining machine with 3 clicks/s"
+      },
+      "hydro": {
+        "name": "Hydro Miner",
+        "description": "Advanced mining machine with 5 clicks/s"
+      },
+      "electric": {
+        "name": "Electric Miner",
+        "description": "Premium mining machine with 10 clicks/s"
+      }
+    },
+    "errors": {
+      "insufficientGold": "Insufficient $GOLD balance",
+      "invalidMiner": "Invalid miner type",
+      "purchaseFailed": "Unable to purchase miner",
+      "alreadyOwned": "Already have a miner",
+      "generic": "Failed to rent miner. Please try again."
+    }
+  }
+}
