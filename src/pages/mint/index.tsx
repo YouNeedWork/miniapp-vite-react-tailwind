@@ -33,8 +33,8 @@ export default function MintView() {
   const [showWelcome, setShowWelcome] = useState(false);
 
   // Check if session key is valid
-  const isSessionKeyValid = sessionKey && 
-    sessionKey.getCreateTime() !== null && 
+  const isSessionKeyValid = sessionKey &&
+    sessionKey.getCreateTime() !== null &&
     Date.now() - sessionKey.getCreateTime() <= APP_CONFIG.maxInactiveInterval * 1000;
 
   useEffect(() => {
@@ -100,7 +100,11 @@ export default function MintView() {
       style={{ backgroundImage: "url('/imgs/mint/bg.png')" }}
     >
       <AudioControl className="absolute top-4 right-4 z-50" />
-      <BoostRateButton className="absolute top-4 left-4 z-50" />
+
+      {!showSessionKeyModal && (
+        <BoostRateButton className="absolute top-4 left-4 z-50" />
+      )}
+
 
       <div className="w-full h-[90px] md:h-[120px] lg:h-[160px] flex items-center justify-center">
         <div
@@ -150,7 +154,7 @@ export default function MintView() {
             onOpenShop={() => setIsShopOpen(true)}
             onRefresh={handleRefresh}
           />
-          
+
           {/* Modals - Order is important */}
           <SessionKeyModal
             isOpen={showSessionKeyModal}
@@ -159,7 +163,7 @@ export default function MintView() {
             isCreating={isCreating}
             hasGas={hasGas}
           />
-          
+
           {!showSessionKeyModal && (
             <>
               <WelcomeDialog

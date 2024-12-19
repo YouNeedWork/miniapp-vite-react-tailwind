@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/Modal';
 import { BackpackItem } from './BackpackItem';
 import { BackpackItemType, ITEM_TYPES, useBackpackItems } from '@/hooks/useBackpackItems';
@@ -6,6 +7,7 @@ import { useEatHamburger } from '@/hooks/useEatHamburger';
 import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
 import { createRoochClient } from '@/utils/rooch';
 import { useHunger } from '@/hooks/queries/useHunger';
+import { useToggleCard } from './hooks/useToggleCard';
 
 interface BackpackProps {
   isOpen: boolean;
@@ -13,11 +15,13 @@ interface BackpackProps {
 }
 
 export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const { data: items = [], refetch } = useBackpackItems();
   const { eatHamburger } = useEatHamburger();
   const { refetchHunger } = useHunger();
   const address = useCurrentAddress();
   const client = createRoochClient();
+  const { toggleCard } = useToggleCard();
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +50,7 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
       const success = await eatHamburger(objectId);
       if (success) {
         await refetch();
-        await refetchHunger(); // Refresh hunger after eating
+        await refetchHunger();
       }
     } catch (error) {
       console.error('Failed to eat hamburger:', error);
@@ -54,13 +58,35 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
   };
 
   const handleToggleEquip = async (item: BackpackItemType) => {
-    // TODO: Implement card equip/unequip logic
-    console.log('Toggle equip for item:', item);
+    if (!item.isCard || item.quantity === 0) return;
+
+    try {
+      const objects = await client.queryObjectStates({
+        filter: {
+          object_type_with_owner: {
+            object_type: item.type,
+            owner: address!.toStr(),
+          },
+        },
+      });
+
+      if (!objects.data.length) {
+        throw new Error('No card object found');
+      }
+
+      const objectId = objects.data[0].id;
+      const success = await toggleCard(objectId, item.isEquipped);
+      if (success) {
+        await refetch();
+      }
+    } catch (error) {
+      console.error('Failed to toggle card:', error);
+    }
   };
 
   return (
     <Modal
-      title="Backpack"
+      title={t('backpack.title')}
       isOpen={isOpen}
       onClose={onClose}
     >
@@ -69,7 +95,7 @@ export const Backpack: React.FC<BackpackProps> = ({ isOpen, onClose }) => {
           <BackpackItem
             key={item.id}
             item={item}
-            onEat={() => handleEat()}
+            onEat={item.type === ITEM_TYPES.HAMBURGER ? handleEat : undefined}
             onToggleEquip={item.isCard ? handleToggleEquip : undefined}
           />
         ))}

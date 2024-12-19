@@ -1,46 +1,69 @@
 {
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "confirm": "Confirm",
-    "cancel": "Cancel",
-    "close": "Close",
-    "back": "Back",
-    "clicksPerSecond": "clicks/s"
+    "wallet": {
+      "connect": "Please connect your wallet"
+    },
+    "buttons": {
+      "done": "Done",
+      "go": "Go"
+    }
   },
-  "nav": {
-    "mine": "Mine",
-    "earn": "Earn",
-    "friends": "Friends",
-    "me": "Me"
-  },
-  "me": {
-    "disconnect": "Disconnect",
-    "myOrders": "My Orders",
-    "accountManagement": "Account Management",
-    "language": "Language",
-    "selectLanguage": "Select Language"
-  },
-  "mining": {
-    "rentMiner": "Rent Miner",
-    "claimRewards": "Claim Rewards",
-    "dailyCheckIn": "Daily Check-in",
-    "hunger": "Hunger",
-    "autoMining": "Auto Mining",
-    "manualMining": "Manual Mining",
-    "claimableAmount": "Claimable Amount"
+  "backpack": {
+    "title": "Backpack",
+    "quantity": "x{{count}}",
+    "items": {
+      "hamburger": {
+        "name": "Hamburger",
+        "action": "Eat"
+      },
+      "boostCard": {
+        "name": "Boost Card",
+        "action": {
+          "equip": "Equip",
+          "unequip": "Unequip"
+        }
+      },
+      "ogCard": {
+        "name": "OG Card",
+        "action": {
+          "equip": "Equip",
+          "unequip": "Unequip"
+        }
+      },
+      "earlyCard": {
+        "name": "Early Card",
+        "action": {
+          "equip": "Equip",
+          "unequip": "Unequip"
+        }
+      },
+      "goldOre": {
+        "name": "Gold Ore"
+      },
+      "silverOre": {
+        "name": "Silver Ore"
+      },
+      "copperOre": {
+        "name": "Copper Ore"
+      },
+      "ironOre": {
+        "name": "Iron Ore"
+      },
+      "refiningPotion": {
+        "name": "Refining Potion"
+      }
+    }
   },
   "shop": {
     "title": "Mining Machines Shop",
     "description": "Rent mining machines to increase your mining efficiency",
     "alreadyOwned": "Already Owned",
     "alreadyOwnedMessage": "You already have an auto miner",
-    "alreadyOwnedError": "You already have an auto miner",
     "rentNow": "Rent Now",
-    "rentSuccess": "Successfully rented miner!",
+    "buyNow": "Buy Now",
     "days": "days",
     "clicksPerSecond": "clicks/s",
+    "insufficientRgas": "Insufficient RGAS balance",
     "items": {
       "manual": {
         "name": "Manual Miner",
@@ -53,14 +76,75 @@
       "electric": {
         "name": "Electric Miner",
         "description": "Premium mining machine with 10 clicks/s"
+      },
+      "boost": {
+        "name": "Boost Card",
+        "description": "Boost acceleration card, provides 2.5x speed boost"
       }
-    },
-    "errors": {
-      "insufficientGold": "Insufficient $GOLD balance",
-      "invalidMiner": "Invalid miner type",
-      "purchaseFailed": "Unable to purchase miner",
-      "alreadyOwned": "Already have a miner",
-      "generic": "Failed to rent miner. Please try again."
     }
+  },
+  "auth": {
+    "sessionKey": {
+      "title": "Create Session Key",
+      "description": "A session key allows you to interact with the game without having to approve every transaction.",
+      "validity": "It's valid for {{hours}} hours and makes your gaming experience smoother.",
+      "create": "Create Session Key",
+      "gasRequired": {
+        "title": "Gas Required",
+        "description": "You need RGas to create a session key and play the game. Please obtain some RGas first.",
+        "steps": {
+          "title": "How to get RGas:",
+          "visit": "Visit the Rooch faucet",
+          "connect": "Connect your wallet",
+          "request": "Request RGas tokens",
+          "return": "Return here to create your session key"
+        },
+        "button": "Get RGas"
+      },
+      "features": {
+        "title": "Session Key Features:",
+        "automatic": "Automatic transaction signing",
+        "enhanced": "Enhanced gaming experience",
+        "secure": "Secure and time-limited access",
+        "noConfirm": "No need for repeated wallet confirmations"
+      }
+    }
+  },
+  "earn": {
+    "title": "Complete the Task, Earn Rewards!",
+    "subtitle": "Daily Task - Daily reward",
+    "availableTasks": {
+      "title": "Available Tasks",
+      "description": "Complete these tasks to earn rewards"
+    },
+    "completedTasks": {
+      "title": "Completed Tasks",
+      "description": "You've already earned these rewards"
+    },
+    "buttons": {
+      "claim": "Claim",
+      "go": "Go",
+      "done": "Done"
+    },
+    "tasks": {
+      "vote": {
+        "title": "Vote Level {{level}} ({{votes}} votes)",
+        "description": "Vote for Gold Miner to earn rewards",
+        "error": "Failed to process vote action"
+      },
+      "twitter": {
+        "title": "Bind Twitter Account",
+        "description": "Connect your Twitter account to earn rewards",
+        "error": "Failed to process Twitter action"
+      }
+    }
+  },
+  "friends": {
+    "totalRewards": "Total Rewards",
+    "inviteCode": "Your Invite Code",
+    "shareLink": "Share Invite Link",
+    "copySuccess": "Invite link copied to clipboard!",
+    "rewardDesc": "For every friend that plays,",
+    "rewardDetails": "you both get +100 Gold! and 15% of their rewards!"
   }
 }

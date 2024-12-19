@@ -1,53 +1,43 @@
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
+import { VoteLevel } from '@/components/VoteLevel';
 import { TaskList } from './components/TaskList';
+import { Header } from './components/Header';
 import { TASK_COLORS } from "./components/TaskList/types";
-import type { Task } from "./components/TaskList/types";
 import { useBalances } from "@/hooks/queries/useBalances";
 import { useTwitterBinding } from "@/hooks/queries/useTwitterBinding";
 import { useVoteLevel } from "@/hooks/queries/useVoteLevel";
 import { useTwitterClaim } from "@/hooks/useTwitterClaim";
 import { useVoteClaim } from "@/hooks/useVoteClaim";
-import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { getVoteTask } from "@/constants/voteTasks";
-import toast from "react-hot-toast";
 import { useTaskCompletion } from '@/hooks/queries/useTaskCompletion';
-
-const createTask = (
-  id: string,
-  title: string,
-  icon: string,
-  iconBgColor: string,
-  reward: number,
-  completed: boolean,
-  buttonText: string,
-  onAction: () => Promise<void>
-): Task => ({
-  id,
-  title,
-  icon,
-  iconBgColor,
-  reward,
-  completed,
-  buttonText,
-  onAction,
-});
+import toast from "react-hot-toast";
 
 const TWITTER_TASK_ID = 10001;
 
 export default function EarnView() {
+  const { t } = useTranslation();
   const { RgasBalance } = useBalances();
   const address = useCurrentAddress();
   const { data: twitterId, refetch: refetchTwitter } = useTwitterBinding();
   const { data: vote = 0, refetch: refetchVote } = useVoteLevel();
   const { claimTwitterReward } = useTwitterClaim();
   const { claimVoteReward } = useVoteClaim();
-
   const { data: twitterTaskClaimed = false } = useTaskCompletion(TWITTER_TASK_ID);
+
+  if (!address) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-medium text-gray-600">{t('common.wallet.connect')}</p>
+      </div>
+    );
+  }
 
   // Handle Twitter task
   const handleTwitterAction = useCallback(async () => {
     if (!address) {
-      toast.error("Please connect your wallet first");
+      toast.error(t('common.wallet.connect'));
       return;
     }
 
@@ -64,14 +54,14 @@ export default function EarnView() {
       await refetchTwitter();
     } catch (error) {
       console.error('Twitter action failed:', error);
-      toast.error("Failed to process Twitter action");
+      toast.error(t('earn.tasks.twitter.error'));
     }
-  }, [address, twitterId, claimTwitterReward, refetchTwitter]);
+  }, [address, twitterId, claimTwitterReward, refetchTwitter, t]);
 
   // Handle vote task
   const handleVoteAction = useCallback(async () => {
     if (!address) {
-      toast.error("Please connect your wallet first");
+      toast.error(t('common.wallet.connect'));
       return;
     }
 
@@ -84,115 +74,112 @@ export default function EarnView() {
       await refetchVote();
     } catch (error) {
       console.error('Vote action failed:', error);
-      toast.error("Failed to process vote action");
+      toast.error(t('earn.tasks.vote.error'));
     }
-  }, [address, vote, claimVoteReward, refetchVote]);
+  }, [address, vote, claimVoteReward, refetchVote, t]);
 
   // Create task list
   const tasks = React.useMemo(() => {
-    const currentVoteTask = getVoteTask(Number(vote) || 0);
-    const voteLevel = currentVoteTask.level;
+    if (!vote) return [];
+    console.log("vote", vote);
+    const currentVoteTask = getVoteTask(Number(vote ? vote.votes : 0));
+    //console.log("currentVoteTask", currentVoteTask);
+    const voteLevel = vote.level;
     const hasValidTwitterId = twitterId && typeof twitterId !== 'object';
 
-    return [
-      createTask(
-        "6",
-        `Vote Level ${voteLevel} (${currentVoteTask.requiredVotes.toLocaleString()} votes)`,
-        "/imgs/task_1.png",
-        TASK_COLORS.green,
-        currentVoteTask.reward,
-        voteLevel > 0,
-        voteLevel > 0 ? "Claim" : "Go",
-        handleVoteAction
-      ),
-      createTask(
-        "7",
-        "Bind Twitter Account",
-        "/imgs/task_3.png",
-        TASK_COLORS.green,
-        100000,
-        hasValidTwitterId,
-        hasValidTwitterId ? !twitterTaskClaimed ? "Claim" : "Done" : "GO",
-        handleTwitterAction
-      ),
+    let tasks = [
+      /*
+      {
+        id: "vote",
+        title: t('earn.tasks.vote.title', {
+          level: voteLevel,
+          votes: currentVoteTask.requiredVotes.toLocaleString()
+        }),
+        description: t('earn.tasks.vote.description'),
+        icon: "/imgs/task_1.png",
+        iconBgColor: TASK_COLORS.green,
+        reward: currentVoteTask.reward,
+        completed: voteLevel > 0,
+        buttonText: voteLevel > 0 ? t('earn.buttons.claim') : t('earn.buttons.go'),
+        onAction: handleVoteAction
+      },
+      */
+      {
+        id: "twitter",
+        title: t('earn.tasks.twitter.title'),
+        description: t('earn.tasks.twitter.description'),
+        icon: "/imgs/task_3.png",
+        iconBgColor: TASK_COLORS.green,
+        reward: 100000,
+        completed: hasValidTwitterId,
+        buttonText: hasValidTwitterId
+          ? !twitterTaskClaimed
+            ? t('earn.buttons.claim')
+            : t('earn.buttons.done')
+          : t('earn.buttons.go'),
+        onAction: handleTwitterAction
+      }
     ];
-  }, [vote, twitterId, handleVoteAction, handleTwitterAction, twitterTaskClaimed]);
 
-  const completedTasks = React.useMemo(() =>
-    tasks.filter(task => task.completed),
-    [tasks]
-  );
+    for (let i = 0; i < voteLevel; i++) {
+      tasks.push({
+        id: `vote_${i + 1}`,
+        title: t('earn.tasks.vote.title', {
+          level: i + 1,
+          votes: 100000000
+        }),
+        description: t('earn.tasks.vote.description'),
+        icon: "/imgs/task_1.png",
+        iconBgColor: TASK_COLORS.green,
+        reward: 100000,
+        completed: true,
+        buttonText: t('earn.buttons.go'),
+        onAction: handleVoteAction
+      });
+    }
 
-  const pendingTasks = React.useMemo(() => {
-    const uncompletedTasks = tasks.filter(task => !task.completed);
-    const needsRGas = parseFloat(RgasBalance) === 0;
 
-    return needsRGas
-      ? uncompletedTasks.sort((a, b) => (a.id === "3" ? -1 : b.id === "3" ? 1 : 0))
-      : uncompletedTasks;
-  }, [tasks, RgasBalance]);
+    console.log("tasks", tasks);
 
-  if (!address) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-medium text-gray-600">Please connect your wallet</p>
-      </div>
-    );
-  }
+    return tasks;
+  }, [vote, twitterId, handleVoteAction, handleTwitterAction, twitterTaskClaimed, t]);
+
+  const completedTasks = tasks.filter(task => task.completed);
+  const pendingTasks = tasks.filter(task => !task.completed);
+
 
   return (
     <div
       className="w-screen min-h-screen bg-center bg-no-repeat pt-[60px] bg-cover"
       style={{ backgroundImage: "url('/imgs/earnBg.png')" }}
     >
-      <img className="w-full" src="/imgs/earn_title.png" alt="Earn Title" />
+      <img className="w-full" src="/imgs/earn_title.png" alt={t('earn.title')} />
 
       <div className="px-[10px] w-full pb-[85px]">
         <Header />
 
-        <TasksSection
-          pendingTasks={pendingTasks}
-          completedTasks={completedTasks}
-        />
+        <div className="mb-6">
+          <VoteLevel />
+        </div>
+
+        <div className="space-y-6">
+          {pendingTasks.length > 0 && (
+            <TaskList
+              title={t('earn.availableTasks.title')}
+              description={t('earn.availableTasks.description')}
+              tasks={pendingTasks}
+            />
+          )}
+
+          {completedTasks.length > 0 && (
+            <TaskList
+              title={t('earn.completedTasks.title')}
+              description={t('earn.completedTasks.description')}
+              tasks={completedTasks}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
-const Header = () => (
-  <div className="flex items-center justify-center mt-[-20px] mb-6">
-    <img
-      className="w-[153px] h-[130px] origin-top-left"
-      src="/imgs/earnHeader.png"
-      alt="Earn Header"
-    />
-    <div className="flex flex-col">
-      <div className="w-[184px] text-white text-lg font-black font-['Poppins'] leading-normal">
-        Complete the Task, Earn Rewards!
-      </div>
-      <div className="text-black text-xs font-bold font-['Poppins']">
-        Daily Task - Daily reward
-      </div>
-    </div>
-  </div>
-);
-
-const TasksSection = ({ pendingTasks, completedTasks }: { pendingTasks: Task[], completedTasks: Task[] }) => (
-  <div className="space-y-6">
-    {pendingTasks.length > 0 && (
-      <TaskList
-        title="Available Tasks"
-        description="Complete these tasks to earn rewards"
-        tasks={pendingTasks}
-      />
-    )}
-
-    {completedTasks.length > 0 && (
-      <TaskList
-        title="Completed Tasks"
-        description="You've already earned these rewards"
-        tasks={completedTasks}
-      />
-    )}
-  </div>
-);

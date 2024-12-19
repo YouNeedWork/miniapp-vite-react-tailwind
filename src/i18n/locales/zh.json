@@ -1,46 +1,69 @@
 {
   "common": {
-    "loading": "加载中...",
-    "error": "错误",
-    "success": "成功",
-    "confirm": "确认",
-    "cancel": "取消",
-    "close": "关闭",
-    "back": "返回",
-    "clicksPerSecond": "次/秒"
+    "wallet": {
+      "connect": "请连接钱包"
+    },
+    "buttons": {
+      "done": "完成",
+      "go": "去做"
+    }
   },
-  "nav": {
-    "mine": "挖矿",
-    "earn": "赚取",
-    "friends": "好友",
-    "me": "我的"
-  },
-  "me": {
-    "disconnect": "断开连接",
-    "myOrders": "我的订单",
-    "accountManagement": "账户管理",
-    "language": "语言",
-    "selectLanguage": "选择语言"
-  },
-  "mining": {
-    "rentMiner": "租用矿机",
-    "claimRewards": "领取奖励",
-    "dailyCheckIn": "每日签到",
-    "hunger": "体力",
-    "autoMining": "自动挖矿",
-    "manualMining": "手动挖矿",
-    "claimableAmount": "可领取数量"
+  "backpack": {
+    "title": "背包",
+    "quantity": "x{{count}}",
+    "items": {
+      "hamburger": {
+        "name": "汉堡",
+        "action": "食用"
+      },
+      "boostCard": {
+        "name": "加速卡",
+        "action": {
+          "equip": "装备",
+          "unequip": "卸下"
+        }
+      },
+      "ogCard": {
+        "name": "OG卡",
+        "action": {
+          "equip": "装备",
+          "unequip": "卸下"
+        }
+      },
+      "earlyCard": {
+        "name": "早期卡",
+        "action": {
+          "equip": "装备",
+          "unequip": "卸下"
+        }
+      },
+      "goldOre": {
+        "name": "金矿石"
+      },
+      "silverOre": {
+        "name": "银矿石"
+      },
+      "copperOre": {
+        "name": "铜矿石"
+      },
+      "ironOre": {
+        "name": "铁矿石"
+      },
+      "refiningPotion": {
+        "name": "精炼药水"
+      }
+    }
   },
   "shop": {
     "title": "矿机商店",
     "description": "租用矿机提高挖矿效率",
     "alreadyOwned": "已拥有",
     "alreadyOwnedMessage": "您已拥有自动矿机",
-    "alreadyOwnedError": "您已拥有自动矿机",
     "rentNow": "立即租用",
-    "rentSuccess": "成功租用矿机！",
+    "buyNow": "立即购买",
     "days": "天",
     "clicksPerSecond": "次/秒",
+    "insufficientRgas": "RGAS余额不足",
     "items": {
       "manual": {
         "name": "手动矿机",
@@ -53,14 +76,75 @@
       "electric": {
         "name": "电力矿机",
         "description": "高级矿机，10次/秒"
+      },
+      "boost": {
+        "name": "加速卡",
+        "description": "加速卡，提供2.5倍速度提升"
       }
-    },
-    "errors": {
-      "insufficientGold": "$GOLD余额不足",
-      "invalidMiner": "无效的矿机类型",
-      "purchaseFailed": "无法购买矿机",
-      "alreadyOwned": "已拥有矿机",
-      "generic": "租用矿机失败，请重试"
     }
+  },
+  "auth": {
+    "sessionKey": {
+      "title": "创建会话密钥",
+      "description": "会话密钥允许您与游戏交互而无需每次都批准交易。",
+      "validity": "有效期为{{hours}}小时，让您的游戏体验更流畅。",
+      "create": "创建会话密钥",
+      "gasRequired": {
+        "title": "需要Gas",
+        "description": "您需要RGas来创建会话密钥并玩游戏。请先获取一些RGas。",
+        "steps": {
+          "title": "如何获取RGas：",
+          "visit": "访问Rooch水龙头",
+          "connect": "连接钱包",
+          "request": "申请RGas代币",
+          "return": "返回此处创建会话密钥"
+        },
+        "button": "获取RGas"
+      },
+      "features": {
+        "title": "会话密钥特性：",
+        "automatic": "自动交易签名",
+        "enhanced": "增强游戏体验",
+        "secure": "安全且时限访问",
+        "noConfirm": "无需重复钱包确认"
+      }
+    }
+  },
+  "earn": {
+    "title": "完成任务，赚取奖励！",
+    "subtitle": "每日任务 - 每日奖励",
+    "availableTasks": {
+      "title": "可用任务",
+      "description": "完成这些任务以赚取奖励"
+    },
+    "completedTasks": {
+      "title": "已完成任务",
+      "description": "您已经赚取了这些奖励"
+    },
+    "buttons": {
+      "claim": "领取",
+      "go": "去做",
+      "done": "完成"
+    },
+    "tasks": {
+      "vote": {
+        "title": "投票等级 {{level}} ({{votes}} 票)",
+        "description": "为Gold Miner投票以赚取奖励",
+        "error": "处理投票操作失败"
+      },
+      "twitter": {
+        "title": "绑定Twitter账号",
+        "description": "连接您的Twitter账号以赚取奖励",
+        "error": "处理Twitter操作失败"
+      }
+    }
+  },
+  "friends": {
+    "totalRewards": "总奖励",
+    "inviteCode": "您的邀请码",
+    "shareLink": "分享邀请链接",
+    "copySuccess": "邀请链接已复制到剪贴板！",
+    "rewardDesc": "每邀请一个朋友玩游戏，",
+    "rewardDetails": "你们双方都可获得+100金币！并获得他们奖励的15%！"
   }
 }

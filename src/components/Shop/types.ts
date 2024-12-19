@@ -3,19 +3,16 @@ import { NFT_IMAGES } from "@/constants/images";
 export interface ShopItem {
   id: string;
   name: string;
-  type: "manual" | "hydro" | "electric";
+  type: "manual" | "hydro" | "electric" | "boost";
   image: string;
-  clicksPerSecond: number;
+  clicksPerSecond?: number;
   rentalPeriods: {
     days: number;
     price: number;
   }[];
   description: string;
+  currency?: "GOLD" | "RGAS";
 }
-
-// manual_miner_cost: 30_000, //3w
-// hydro_miner_cost: 50_000, //5w
-// electric_miner_cost: 100_000, //10w
 
 export const SHOP_ITEMS: ShopItem[] = [
   {
@@ -30,6 +27,7 @@ export const SHOP_ITEMS: ShopItem[] = [
       { days: 21, price: 150000 },
     ],
     description: "Basic mining machine with 3 clicks/s",
+    currency: "GOLD"
   },
   {
     id: "hydro-miner",
@@ -43,6 +41,7 @@ export const SHOP_ITEMS: ShopItem[] = [
       { days: 30, price: 250000 },
     ],
     description: "Advanced mining machine with 5 clicks/s",
+    currency: "GOLD"
   },
   {
     id: "electric-miner",
@@ -56,5 +55,18 @@ export const SHOP_ITEMS: ShopItem[] = [
       { days: 30, price: 500000 },
     ],
     description: "Premium mining machine with 10 clicks/s",
+    currency: "GOLD"
   },
+  {
+    id: "boost-card",
+    name: "Boost Card",
+    type: "boost",
+    image: NFT_IMAGES.BOOST_CARD,
+    rentalPeriods: [
+      { days: 7, price: 100 },
+      { days: 30, price: 300 }
+    ],
+    description: "Boost acceleration card, provides 2.5x speed boost",
+    currency: "RGAS"
+  }
 ];

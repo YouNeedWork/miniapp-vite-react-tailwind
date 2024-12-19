@@ -4,20 +4,32 @@ import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import type { ShopItem } from './types';
 import { useMineInfo } from '@/hooks/queries/useMineInfo';
+import { useBalances } from '@/hooks/queries/useBalances';
+import toast from 'react-hot-toast';
 
 interface ShopItemProps {
   item: ShopItem;
-  onRent: (item: ShopItem, days: number) => void;
+  onRent: (days: number) => void;
+  disabled?: boolean;
 }
 
-export const ShopItemCard: React.FC<ShopItemProps> = ({ item, onRent }) => {
+export const ShopItemCard: React.FC<ShopItemProps> = ({ item, onRent, disabled }) => {
   const { t } = useTranslation();
   const [selectedPeriod, setSelectedPeriod] = useState(item.rentalPeriods[0].days);
   const { data: mineInfo } = useMineInfo();
+  const { RgasBalance } = useBalances();
+  
   const hasAutoMiner = mineInfo?.type === 'auto';
+  const isBoostCard = item.type === 'boost';
+  const selectedPrice = item.rentalPeriods.find(p => p.days === selectedPeriod)?.price || 0;
+  const hasEnoughRgas = !isBoostCard || parseFloat(RgasBalance) >= selectedPrice;
 
-  const handleRent = () => {
-    onRent(item, selectedPeriod);
+  const handleAction = () => {
+    if (isBoostCard && !hasEnoughRgas) {
+      toast.error(t('shop.insufficientRgas'));
+      return;
+    }
+    onRent(selectedPeriod);
   };
 
   return (
@@ -26,16 +38,18 @@ export const ShopItemCard: React.FC<ShopItemProps> = ({ item, onRent }) => {
         <div className="w-16 h-16 bg-gray-100 rounded-lg p-2">
           <img 
             src={item.image} 
-            alt={t(`shop.items.${item.type}.name`)} 
+            alt={t(`shop.items.${item.type}.name`)}
             className="w-full h-full object-contain"
           />
         </div>
         <div>
           <h3 className="font-bold text-lg">{t(`shop.items.${item.type}.name`)}</h3>
           <p className="text-sm text-gray-600">{t(`shop.items.${item.type}.description`)}</p>
-          <p className="text-sm font-medium text-blue-600">
-            {item.clicksPerSecond} {t('shop.clicksPerSecond')}
-          </p>
+          {item.clicksPerSecond && (
+            <p className="text-sm font-medium text-blue-600">
+              {item.clicksPerSecond} {t('shop.clicksPerSecond')}
+            </p>
+          )}
         </div>
       </div>
 
@@ -45,13 +59,13 @@ export const ShopItemCard: React.FC<ShopItemProps> = ({ item, onRent }) => {
             <button
               key={days}
               onClick={() => setSelectedPeriod(days)}
-              disabled={hasAutoMiner}
+              disabled={!isBoostCard && disabled}
               className={cn(
                 "flex-1 py-1 px-2 rounded border-2 text-sm font-medium transition-colors",
                 selectedPeriod === days
                   ? "border-blue-500 bg-blue-50 text-blue-700"
                   : "border-gray-200 hover:border-blue-200",
-                hasAutoMiner && "opacity-50 cursor-not-allowed"
+                !isBoostCard && disabled && "opacity-50 cursor-not-allowed"
               )}
             >
               {days} {t('shop.days')}
@@ -61,18 +75,31 @@ export const ShopItemCard: React.FC<ShopItemProps> = ({ item, onRent }) => {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <img src="/imgs/g_icon.png" alt="Gold" className="w-4 h-4" />
+            <img 
+              src={item.currency === "RGAS" ? "/imgs/me/wallet_icon.png" : "/imgs/g_icon.png"} 
+              alt={item.currency} 
+              className="w-4 h-4" 
+            />
             <span className="font-bold">
-              {item.rentalPeriods.find(p => p.days === selectedPeriod)?.price}
+              {selectedPrice}
             </span>
+            {isBoostCard && !hasEnoughRgas && (
+              <span className="text-xs text-red-500 ml-1">
+                ({t('shop.insufficientRgas')})
+              </span>
+            )}
           </div>
           <Button
             variant="primary"
             size="sm"
-            onClick={handleRent}
-            disabled={hasAutoMiner}
+            onClick={handleAction}
+            disabled={(!isBoostCard && disabled) || (isBoostCard && !hasEnoughRgas)}
           >
-            {hasAutoMiner ? t('shop.alreadyOwned') : t('shop.rentNow')}
+            {isBoostCard 
+              ? t('shop.buyNow')
+              : !isBoostCard && disabled 
+                ? t('shop.alreadyOwned') 
+                : t('shop.rentNow')}
           </Button>
         </div>
       </div>
