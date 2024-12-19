@@ -28,11 +28,16 @@ export const VoteLevel: React.FC<VoteLevelProps> = ({ className }) => {
           </div>
         </div>
 
-        <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+        {/* Progress Bar Container */}
+        <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+          {/* Progress Bar Fill */}
           <div 
-            className="absolute top-0 left-0 h-full bg-[#999de4] transition-all duration-300"
+            className="absolute top-0 left-0 h-full bg-[#999de4] transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
-          />
+          >
+            {/* Optional: Add a gradient or shine effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          </div>
         </div>
 
         <div className="text-center text-sm text-gray-600">

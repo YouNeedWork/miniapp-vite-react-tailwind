@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { Args, Transaction } from '@roochnetwork/rooch-sdk';
 import { useCurrentSession } from '@roochnetwork/rooch-sdk-kit';
-import { ROOCH_APP } from '@/constants/config';
+import { PKG } from '@/constants/config';
+import { ENV } from '@/config/env';
 import { useQueryClient } from '@tanstack/react-query';
 import { VOTE_LEVEL_QUERY_KEY } from './queries/useVoteLevel';
 import { useTransaction } from './useTransaction';
+import { checkRateLimit, handleApiError } from '@/utils/rateLimit';
 import toast from 'react-hot-toast';
 
 export const useVoteClaim = () => {
@@ -18,18 +20,21 @@ export const useVoteClaim = () => {
       return false;
     }
 
-    if (!ROOCH_APP) {
-      toast.error('Configuration error: ROOCH_APP not defined');
+    // Check rate limit
+    if (!checkRateLimit('vote-claim')) {
       return false;
     }
 
     try {
       const txn = new Transaction();
       txn.callFunction({
-        address: ROOCH_APP,
-        module: 'vote_task',
-        function: 'claim_reward',
-        args: [Args.u64(level)],
+        address: PKG,
+        module: 'tasks',
+        function: 'complete_vote',
+        args: [
+          Args.objectId(ENV.VOTE_OBJECT),
+          Args.u64(BigInt(11000 + level))
+        ],
         typeArgs: [],
       });
 
@@ -40,15 +45,17 @@ export const useVoteClaim = () => {
           toast.success('Vote reward claimed successfully!');
         },
         onError: (error) => {
+          const errorMessage = handleApiError(error);
           console.error('Vote claim error:', error);
-          toast.error('Failed to claim vote reward. Please try again.');
+          toast.error(errorMessage);
         },
       });
 
       return success;
     } catch (error: any) {
+      const errorMessage = handleApiError(error);
       console.error('Vote claim error:', error);
-      toast.error('Failed to claim vote reward. Please try again.');
+      toast.error(errorMessage);
       return false;
     }
   }, [sessionKey, queryClient, execute]);

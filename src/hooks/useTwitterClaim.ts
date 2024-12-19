@@ -5,6 +5,7 @@ import { ROOCH_APP, PKG } from "@/constants/config";
 import { useQueryClient } from "@tanstack/react-query";
 import { TWITTER_BINDING_QUERY_KEY } from "./queries/useTwitterBinding";
 import { useTransaction } from "./useTransaction";
+import { checkRateLimit, handleApiError } from '@/utils/rateLimit';
 import toast from "react-hot-toast";
 
 export const useTwitterClaim = () => {
@@ -20,6 +21,11 @@ export const useTwitterClaim = () => {
 
     if (!ROOCH_APP) {
       toast.error("Configuration error: ROOCH_APP not defined");
+      return false;
+    }
+
+    // Check rate limit
+    if (!checkRateLimit('twitter-claim')) {
       return false;
     }
 
@@ -43,15 +49,17 @@ export const useTwitterClaim = () => {
           toast.success("Twitter reward claimed successfully!");
         },
         onError: (error) => {
+          const errorMessage = handleApiError(error);
           console.error("Twitter claim error:", error);
-          toast.error("Failed to claim Twitter reward. Please try again.");
+          toast.error(errorMessage);
         },
       });
 
       return success;
     } catch (error: any) {
+      const errorMessage = handleApiError(error);
       console.error("Twitter claim error:", error);
-      toast.error("Failed to claim Twitter reward. Please try again.");
+      toast.error(errorMessage);
       return false;
     }
   }, [sessionKey, queryClient, execute]);

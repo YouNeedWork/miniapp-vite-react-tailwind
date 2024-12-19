@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Args } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
-import { ROOCH_APP } from "@/constants/config";
+import { ENV } from '@/config/env';
 import { createRoochClient } from "@/utils/rooch";
+import { VOTE_TASKS } from '@/constants/voteTasks';
 
 export const VOTE_LEVEL_QUERY_KEY = ["voteLevel"] as const;
 
@@ -22,23 +23,13 @@ export const useVoteLevel = () => {
     queryFn: async () => {
       if (!address) return null;
 
-      console.log("address", [
-        Args.objectId(
-          "0x709cd79cc01a0159a3258e3b90c80398d762d42d0f2c3ed9527938eeafdeaabb"
-        ),
-        Args.address(address.genRoochAddress().toHexAddress()),
-        Args.string("goldminer"),
-      ]);
-
       try {
         const result = await client.executeViewFunction({
-          address: ROOCH_APP,
+          address: ENV.ROOCH_APP,
           module: "grow_information_v3",
           function: "get_vote",
           args: [
-            Args.objectId(
-              "0x709cd79cc01a0159a3258e3b90c80398d762d42d0f2c3ed9527938eeafdeaabb"
-            ),
+            Args.objectId(ENV.VOTE_OBJECT),
             Args.address(address.genRoochAddress().toHexAddress()),
             Args.string("goldminer"),
           ],
@@ -47,24 +38,31 @@ export const useVoteLevel = () => {
 
         const votes = Number(result.return_values?.[0]?.decoded_value || 0);
 
-        // Calculate level based on votes
-        let level = 0;
-        let nextLevelVotes = 10000; // Base requirement for level 1
+        // Find current level and next level requirements
+        let currentLevel = 0;
+        let currentLevelVotes = 0;
+        let nextLevelVotes = VOTE_TASKS[0].requiredVotes;
 
-        while (votes >= nextLevelVotes && level < 5) {
-          level++;
-          nextLevelVotes *= 10;
+        for (const task of VOTE_TASKS) {
+          if (votes >= task.requiredVotes) {
+            currentLevel = task.level;
+            currentLevelVotes = task.requiredVotes;
+            const nextTask = VOTE_TASKS[task.level + 1];
+            if (nextTask) {
+              nextLevelVotes = nextTask.requiredVotes;
+            }
+          } else {
+            break;
+          }
         }
 
-        const progress =
-          level < 5
-            ? ((votes - nextLevelVotes / 10) /
-                (nextLevelVotes - nextLevelVotes / 10)) *
-              100
-            : 100;
+        // Calculate progress percentage
+        const progressVotes = votes - currentLevelVotes;
+        const votesNeeded = nextLevelVotes - currentLevelVotes;
+        const progress = (progressVotes / votesNeeded) * 100;
 
         return {
-          level,
+          level: currentLevel,
           votes,
           nextLevelVotes,
           progress: Math.min(Math.max(progress, 0), 100),
@@ -74,7 +72,7 @@ export const useVoteLevel = () => {
         return null;
       }
     },
-    enabled: !!address && !!ROOCH_APP,
+    enabled: !!address,
     staleTime: 30000,
     retry: 2,
     retryDelay: 1000,

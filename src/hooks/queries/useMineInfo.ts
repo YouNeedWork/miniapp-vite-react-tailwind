@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { RoochClient } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { PKG } from "@/constants/config";
 import { createRoochClient } from "@/utils/rooch";
@@ -7,6 +6,8 @@ import { createRoochClient } from "@/utils/rooch";
 export interface MineInfo {
   id: string;
   type: "manual" | "auto";
+    hasMiner: boolean;
+  minerCreate: boolean;
 }
 
 export const MINE_INFO_QUERY_KEY = ["mineInfo"] as const;
@@ -21,34 +22,38 @@ export function useMineInfo() {
       if (!address) return null;
 
       try {
-        const objects: any = await client.getStates({
+        const objects = await client.getStates({
           accessPath: `/resource/${address
             .genRoochAddress()
             .toHexAddress()}/${PKG}::gold_miner::MineInfo`,
           stateOption: { decode: true },
         });
 
-        if (objects.length == 0) {
-          return { id: "", type: "manual" } as MineInfo;
+        if (objects.length === 0) {
+          return { id: "", type: "manual", hasMiner: false,minerCreate:false, } as MineInfo;
         }
 
         const mineInfo = objects[0].decoded_value?.value.value.value;
-
-        console.log("mineInfo", mineInfo);
-        let id = objects[0].id;
+        const id = objects[0].id;
         let type = "manual";
+        let hasMiner = false;
+
         if (
           mineInfo.auto_miner.value.vec &&
           mineInfo.auto_miner.value.vec.value && 
           mineInfo.auto_miner.value.vec.value.length > 0
         ) {
           type = "auto";
+          hasMiner = true;
         }
 
-        return { id, type } as MineInfo;
+        // Check if user has started mining
+        hasMiner = hasMiner || (mineInfo.manual_miner && mineInfo.manual_miner.value);
+
+        return { id, type, hasMiner,minerCreate:true } as MineInfo;
       } catch (error) {
         console.error("Failed to fetch mine info:", error);
-        return { id: "", type: "manual" } as MineInfo;
+        return { id: "", type: "manual", hasMiner: false } as MineInfo;
       }
     },
     enabled: !!address,

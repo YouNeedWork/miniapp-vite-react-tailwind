@@ -10,4 +10,5 @@ export const ENV = {
   API_BASE_URL: getEnvVar("VITE_API_BASE_URL"),
   PKG: getEnvVar("VITE_PKG"),
   ROOCH_APP: getEnvVar("VITE_ROOCH_APP"),
+  VOTE_OBJECT: getEnvVar("VITE_VOTE_OBJECT"),
 } as const;
