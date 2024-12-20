@@ -29,7 +29,7 @@ export const InviteRewards: React.FC = () => {
           <h3 className="text-2xl font-bold text-[#efac57]">{t('friends.totalRewards')}</h3>
           <div className="flex items-center justify-center gap-2">
             <img src="/imgs/g_icon.png" alt="Gold" className="w-6 h-6" />
-            <span className="text-3xl font-bold">{formatNumber(totalRewards)}</span>
+            <span className="text-3xl font-bold">{formatNumber(totalRewards / 1e6)}</span>
           </div>
         </div>
 
