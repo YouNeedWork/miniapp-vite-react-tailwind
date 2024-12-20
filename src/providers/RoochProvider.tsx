@@ -11,7 +11,7 @@ export default function RoochDappProvider({ children }: { children: React.ReactN
   const autoConnect = !ready;
 
   return (
-    <RoochProvider networks={networkConfig} defaultNetwork="testnet">
+    <RoochProvider networks={networkConfig} defaultNetwork="mainnet">
       <WalletProvider
         chain="bitcoin"
         autoConnect={autoConnect}
