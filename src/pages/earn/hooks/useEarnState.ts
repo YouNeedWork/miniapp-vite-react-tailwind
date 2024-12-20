@@ -18,8 +18,9 @@ export const useEarnState = (): EarnState => {
         const success = await handleVoteClaim(level);
         if (!success) {
           window.open("https://grow.rooch.network/project/goldminer", "_blank");
-          return;
+          return false;
         }
+        return true;
       } catch (error) {
         console.error("Vote action failed:", error);
         toast.error("Failed to process vote action");

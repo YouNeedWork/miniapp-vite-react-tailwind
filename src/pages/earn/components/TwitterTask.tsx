@@ -22,7 +22,7 @@ export const TwitterTask: React.FC<TwitterTaskProps> = ({
     description: t('earn.tasks.twitter.description'),
     icon: '/imgs/task_3.png',
     iconBgColor: TASK_COLORS.blue,
-    reward: needsRGas ? 3 : 1000,
+    reward: 10000,
     completed: isTwitterBound,
     onAction: onTwitterAction
   };
