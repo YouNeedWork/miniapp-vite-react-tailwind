@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Args } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
-import { ENV } from '@/config/env';
+import { ENV } from "@/config/env";
 import { createRoochClient } from "@/utils/rooch";
-import { VOTE_TASKS } from '@/constants/voteTasks';
+import { VOTE_TASKS } from "@/constants/voteTasks";
 
 export const VOTE_LEVEL_QUERY_KEY = ["voteLevel"] as const;
 
@@ -63,7 +63,7 @@ export const useVoteLevel = () => {
 
         return {
           level: currentLevel,
-          votes,
+          votes: votes,
           nextLevelVotes,
           progress: Math.min(Math.max(progress, 0), 100),
         } as VoteInfo;

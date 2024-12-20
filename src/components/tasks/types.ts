@@ -11,9 +11,9 @@ export interface Task {
 }
 
 export const TASK_COLORS = {
-  blue: 'bg-[#afe1fa]',
-  red: 'bg-[#db433e]',
-  green: 'bg-[#90ba57]',
-  yellow: 'bg-[#edad4b]',
-  pink: 'bg-[#e1a8d9]',
+  blue: "bg-[#afe1fa]",
+  red: "bg-[#db433e]",
+  green: "bg-[#90ba57]",
+  yellow: "bg-[#edad4b]",
+  pink: "bg-[#e1a8d9]",
 } as const;

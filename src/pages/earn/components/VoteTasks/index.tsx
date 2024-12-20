@@ -23,8 +23,8 @@ export const VoteTasks: React.FC<VoteTasksProps> = ({ onVoteAction }) => {
   }
 
   const getButtonText = (task: any) => {
-    //if (task.completed) return t('common.buttons.done');
-    return task.completed ? t('common.buttons.claim') : t('earn.buttons.go');
+    if (task.claimed) return "";
+    return task.completed ? t('earn.buttons.claim') : t('earn.buttons.go');
   };
 
   const createVoteTask = (task: any) => ({
@@ -59,10 +59,8 @@ export const VoteTasks: React.FC<VoteTasksProps> = ({ onVoteAction }) => {
   });
 
   // Sort tasks by level
-  const sortedCompletedTasks = [...completedTasks].sort((a, b) => a.level - b.level);
-  console.log('sortedCompletedTasks', sortedCompletedTasks);
+  const sortedClaimedTasks = [...completedTasks].sort((a, b) => a.level - b.level);
   const sortedPendingTasks = [...pendingTasks].sort((a, b) => a.level - b.level);
-  console.log('sortedPendingTasks', sortedPendingTasks);
 
   // Get the next available task
   const nextTask = sortedPendingTasks[0];
@@ -70,10 +68,10 @@ export const VoteTasks: React.FC<VoteTasksProps> = ({ onVoteAction }) => {
   return (
     <div className="space-y-4">
       {/* Show completed tasks */}
-      {sortedCompletedTasks.map(task => (
+      {sortedClaimedTasks.map(task => (
         <TaskItem
           key={`completed_${task.level}`}
-          task={createDoneVoteTask(task)}
+          task={createVoteTask(task)}
         />
       ))}
 

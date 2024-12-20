@@ -1,6 +1,6 @@
-import { VoteInfo } from '@/hooks/queries/useVoteLevel';
-import { VoteTask, VoteSystemState } from './types';
-import { VOTE_TASKS } from '@/constants/voteTasks';
+import { VoteInfo } from "@/hooks/queries/useVoteLevel";
+import { VoteTask, VoteSystemState } from "./types";
+import { VOTE_TASKS } from "@/constants/voteTasks";
 
 export const calculateVoteSystemState = (
   voteInfo: VoteInfo | null,
@@ -12,7 +12,7 @@ export const calculateVoteSystemState = (
       nextLevelVotes: VOTE_TASKS[0].requiredVotes,
       completedTasks: [],
       pendingTasks: [],
-      canClaimReward: false
+      canClaimReward: false,
     };
   }
 
@@ -23,30 +23,31 @@ export const calculateVoteSystemState = (
   for (const task of VOTE_TASKS) {
     const isCompleted = votes >= task.requiredVotes;
     const taskId = 11000 + task.level; // Contract task ID
+    console.log("taskId", completedTaskIds);
     const isClaimed = completedTaskIds.includes(taskId);
-    
+
     tasks.push({
       level: task.level,
       requiredVotes: task.requiredVotes,
       reward: task.reward,
       claimed: isClaimed,
-      completed: isCompleted
+      completed: isCompleted,
     });
   }
 
   // Split tasks into completed and pending
-  const completedTasks = tasks.filter(task => task.completed);
-  const pendingTasks = tasks.filter(task => !task.completed);
+  const completedTasks = tasks.filter((task) => task.completed);
+  const pendingTasks = tasks.filter((task) => !task.completed);
 
   // Check if any completed tasks can be claimed
-  const canClaimReward = completedTasks.some(task => !task.claimed);
+  const canClaimReward = completedTasks.some((task) => !task.claimed);
 
   return {
     currentLevel: voteInfo.level,
     nextLevelVotes: voteInfo.nextLevelVotes,
     completedTasks,
     pendingTasks,
-    canClaimReward
+    canClaimReward,
   };
 };
 
