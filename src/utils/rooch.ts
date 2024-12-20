@@ -1,6 +1,6 @@
 import { RoochClient } from "@roochnetwork/rooch-sdk";
 
-const ROOCH_NODE_URL = "https://test-seed.rooch.network/";
+const ROOCH_NODE_URL = "https://main-seed.rooch.network/";
 
 export const createRoochClient = () => {
   return new RoochClient({ url: ROOCH_NODE_URL });
