@@ -28,7 +28,7 @@ export const useClaim = () => {
       txn.callFunction({
         address: PKG,
         module: 'gold_miner',
-        function: 'claim_auto_mine',
+        function: 'auto_mine',
         args: [],
         typeArgs: [],
       });

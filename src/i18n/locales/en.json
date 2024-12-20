@@ -1,4 +1,9 @@
 {
+  "me": {
+    "title": "Me",
+    "disconnect": "Disconnect",
+    "language": "Language"
+  },
   "common": {
     "wallet": {
       "connect": "Please connect your wallet"

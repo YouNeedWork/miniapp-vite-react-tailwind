@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { buttonStyles } from '../Actions/styles';
 
 interface ClaimButtonProps {
-  onClaim: () => Promise<void>;
+  onClaim: () => Promise<boolean>;
   claimableAmount: number;
 }
 

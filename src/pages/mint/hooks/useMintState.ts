@@ -9,11 +9,13 @@ import { useMineInfo } from '@/hooks/queries/useMineInfo';
 import { useAutoMiningRate } from '@/hooks/queries/useAutoMiningRate';
 import { APP_CONFIG } from '@/constants/config';
 import type { MintState } from '../types';
+import { useClaim } from '@/hooks/useClaim';
 
 export const useMintState = (): MintState => {
   const sessionKey = useCurrentSession();
   const { mine, isLoading: isMining } = useMining();
   const { startMining } = useStartMining();
+  const { claim } = useClaim();
   const { goldBalance, RgasBalance, refetchGoldBalance, refetchRgasBalance } = useBalances();
   const { hunger, refetchHunger } = useHunger();
   const { showModal: showSessionKeyModal, setShowModal: setShowSessionKeyModal, handleCreateSessionKey, isCreating, hasGas } = useSessionKeyCheck();
@@ -44,6 +46,15 @@ export const useMintState = (): MintState => {
     if (success) {
       handleRefresh();
     }
+    return success;
+  };
+
+  const handleClaim = async () => {
+    const success = await claim();
+    if (success) {
+      handleRefresh();
+    }
+    return success;
   };
 
   const handleStart = async () => {
@@ -76,6 +87,7 @@ export const useMintState = (): MintState => {
 
     // Actions
     handleMining,
+    handleClaim,
     handleStart,
     handleRefresh,
     handleCreateSessionKey,
@@ -87,3 +99,4 @@ export const useMintState = (): MintState => {
     setIsShopOpen,
   };
 };
+

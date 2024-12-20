@@ -2,8 +2,8 @@ import React from 'react';
 import { Actions } from './Actions';
 
 interface MintActionsProps {
-  mine: () => Promise<void>;
-  claim: () => Promise<void>;
+  mine: () => Promise<boolean>;
+  claim: () => Promise<boolean>;
   hunger: string;
   onOpenBackpack: () => void;
   onOpenShop: () => void;

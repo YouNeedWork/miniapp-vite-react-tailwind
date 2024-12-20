@@ -10,6 +10,7 @@ export default function MeView() {
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
   const handleDisconnect = async () => {
+    //await wallet.wallet.();
     // Disconnect logic
   };
 
@@ -50,8 +51,8 @@ export default function MeView() {
         </div>
 
         {/* Language Selector */}
-        <div 
-          className="flex justify-between items-center cursor-pointer" 
+        <div
+          className="flex justify-between items-center cursor-pointer"
           onClick={() => setIsLanguageModalOpen(true)}
         >
           <div className="flex gap-2 items-center">
@@ -72,7 +73,7 @@ export default function MeView() {
         </div>
       </div>
 
-      <LanguageSelector 
+      <LanguageSelector
         isOpen={isLanguageModalOpen}
         onClose={() => setIsLanguageModalOpen(false)}
       />

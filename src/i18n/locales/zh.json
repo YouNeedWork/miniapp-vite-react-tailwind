@@ -1,4 +1,9 @@
 {
+  "me": {
+    "title": "我的",
+    "disconnect": "断开连接",
+    "language": "语言"
+  },
   "common": {
     "wallet": {
       "connect": "请连接钱包"

@@ -8,7 +8,8 @@ import { useMineInfo } from '@/hooks/queries/useMineInfo';
 import { useAutoMiningRate } from '@/hooks/queries/useAutoMiningRate';
 
 interface ActionsProps {
-  mine: () => Promise<void>;
+  mine: () => Promise<boolean>;
+  claim: () => Promise<boolean>;
   hunger: string;
   onOpenBackpack: () => void;
   onOpenShop: () => void;
@@ -27,7 +28,6 @@ export const Actions: React.FC<ActionsProps> = ({
 }) => {
   const { data: mineInfo } = useMineInfo();
   const { data: autoMiningAmount = 0 } = useAutoMiningRate();
-  const isAutoMining = mineInfo?.type === 'auto';
 
   return (
     <div className="fixed bottom-[80px] inset-x-0 px-4 md:bottom-[120px] md:px-6 lg:bottom-[160px] lg:px-8">
@@ -53,12 +53,11 @@ export const Actions: React.FC<ActionsProps> = ({
           onMine={mine}
           hunger={hunger}
           onRefresh={onRefresh}
-          isLoading={isLoading}
         />
 
         {/* Right Side - Shop and Claim */}
         <div className="flex flex-col items-end gap-2">
-          {isAutoMining && (
+          {mineInfo?.hasMiner && (
             <ClaimButton
               onClaim={claim}
               claimableAmount={autoMiningAmount}
