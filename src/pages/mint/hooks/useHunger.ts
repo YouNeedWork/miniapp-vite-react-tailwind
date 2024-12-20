@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { RoochClient, Args } from '@roochnetwork/rooch-sdk';
+import { Args } from '@roochnetwork/rooch-sdk';
 import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit';
 import { PKG } from '@/constants/config';
+import { createRoochClient } from '@/utils/rooch';
 
-const client = new RoochClient({ url: 'https://test-seed.rooch.network/' });
+const client = createRoochClient();
 
 export const useHunger = () => {
   const address = useCurrentAddress();

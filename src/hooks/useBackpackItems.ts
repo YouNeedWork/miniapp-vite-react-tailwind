@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { RoochClient } from "@roochnetwork/rooch-sdk";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { PKG } from "@/constants/config";
 import { NFT_IMAGES } from "@/constants/images";
 import { useMinerInfo } from "./queries/useMinerInfo";
+import { createRoochClient } from "@/utils/rooch";
 
-const client = new RoochClient({ url: "https://test-seed.rooch.network/" });
+const client = createRoochClient();
 
 export interface BackpackItemType {
   id: string;
