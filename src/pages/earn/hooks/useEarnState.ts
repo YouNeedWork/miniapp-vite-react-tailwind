@@ -5,6 +5,7 @@ import { useTwitterClaim } from "@/hooks/useTwitterClaim";
 import { useVoteSystem } from "@/hooks/useVoteSystem";
 import toast from "react-hot-toast";
 import type { EarnState } from "../types";
+import { useTaskCompletion } from "@/hooks/queries/useTaskCompletion";
 
 export const useEarnState = (): EarnState => {
   const { data: twitterId } = useTwitterBinding();
@@ -42,6 +43,8 @@ export const useEarnState = (): EarnState => {
       toast.error("Failed to process Twitter action");
     }
   }, [twitterId, claimTwitterReward]);
+
+
 
   return {
     isTwitterBound: !!twitterId,

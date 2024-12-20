@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TaskItem } from '@/components/tasks';
 import { TASK_COLORS } from '@/components/tasks/types';
+import { useTaskCompletion } from '@/hooks/queries/useTaskCompletion';
 
 interface TwitterTaskProps {
   isTwitterBound: boolean;
@@ -15,6 +16,7 @@ export const TwitterTask: React.FC<TwitterTaskProps> = ({
   needsRGas
 }) => {
   const { t } = useTranslation();
+  const { data: isTwitterClaimed } = useTaskCompletion(10001);
 
   const task = {
     id: 'twitter',
@@ -24,6 +26,7 @@ export const TwitterTask: React.FC<TwitterTaskProps> = ({
     iconBgColor: TASK_COLORS.blue,
     reward: 10000,
     completed: isTwitterBound,
+    buttonText: isTwitterClaimed ? "" : t('common.buttons.claim'),
     onAction: onTwitterAction
   };
 
