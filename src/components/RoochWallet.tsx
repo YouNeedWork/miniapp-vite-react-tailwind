@@ -1,4 +1,4 @@
-import { useCurrentAddress, useWalletStore } from "@roochnetwork/rooch-sdk-kit";
+import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import React, { useState } from "react";
 import { WalletModal } from "./Wallet/WalletModal";
 
@@ -6,16 +6,8 @@ export default function RoochWallet() {
     const [btnText, setBtnText] = useState("Connect Wallet");
     const [walletConnectModal, setWalletConnectModal] = useState(false);
     const currentAddress = useCurrentAddress();
-    const connectionStatus = useWalletStore((state) => state.connectionStatus);
-    const setWalletDisconnected = useWalletStore(
-        (state) => state.setWalletDisconnected
-    );
 
     const handleConnect = async () => {
-        if (connectionStatus === "connected") {
-            setWalletDisconnected();
-            return;
-        }
         setWalletConnectModal(true);
     };
 

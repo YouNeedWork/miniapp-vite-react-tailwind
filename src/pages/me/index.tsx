@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { useCurrentAddress, useCurrentWallet } from "@roochnetwork/rooch-sdk-kit";
+import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
 import { LanguageSelector } from '@/components/LanguageSelector';
 
 export default function MeView() {
   const { t } = useTranslation();
-  const wallet = useCurrentWallet();
+  //const wallet = useCurrentWallet();
   const address = useCurrentAddress();
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 

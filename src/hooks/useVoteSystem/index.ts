@@ -47,9 +47,12 @@ export const useVoteSystem = () => {
       }
       return false;
     } catch (error) {
+      /*
       const apiError = handleApiError(error);
       console.error('Vote claim failed:', apiError);
       toast.error(apiError.message);
+      return false;
+      */
       return false;
     }
   }, [claimVoteReward, refetchVoteInfo, taskCompletions]);
