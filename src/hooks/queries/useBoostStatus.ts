@@ -37,7 +37,6 @@ export const useBoostStatus = () => {
         ) || [1, null];
         const isActive = Number(multiplier) > 1 && objectId;
 
-        console.log("multiplier", multiplier);
         return {
           isActive,
           multiplier: Number(multiplier),

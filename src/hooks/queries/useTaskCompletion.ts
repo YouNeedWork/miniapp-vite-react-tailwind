@@ -26,8 +26,6 @@ export const useTaskCompletion = (taskId: number) => {
           ],
           typeArgs: [],
         });
-        console.log("taskId", taskId);
-        console.log("result", result);
 
         return !!result.return_values?.[0]?.decoded_value;
       } catch (error) {

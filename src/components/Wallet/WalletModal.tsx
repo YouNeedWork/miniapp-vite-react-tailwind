@@ -20,9 +20,6 @@ export const WalletModal: React.FC<WalletModalProps> = ({ open, onCancel }) => {
       });
   };
 
-  useEffect(() => {
-    console.log("wallets", wallets);
-  }, [wallets]);
 
   return (
     <Modal width={400} footer={null} onCancel={onCancel} open={open}>

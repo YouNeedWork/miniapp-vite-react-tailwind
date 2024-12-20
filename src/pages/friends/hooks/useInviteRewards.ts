@@ -25,7 +25,6 @@ export const useInviteRewards = () => {
           args: [Args.address(address)],
           typeArgs: [],
         });
-        console.log("rewards", rewards);
         setTotalRewards(
           Number(rewards?.return_values?.[0]?.decoded_value || 0)
         );

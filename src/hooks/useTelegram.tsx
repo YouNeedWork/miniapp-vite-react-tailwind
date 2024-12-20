@@ -51,13 +51,11 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
               localStorage.setItem("token", res.token);
             })
             .catch((err: any) => {
-              console.log(err);
             });
         }
 
         setReady(true);
       } else {
-        console.log("Running in web browser");
         setReady(false);
       }
     }

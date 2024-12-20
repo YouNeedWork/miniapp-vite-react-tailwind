@@ -28,13 +28,6 @@ export const useCheckIn = () => {
         typeArgs: [],
       });
 
-      console.log({
-        address: PKG,
-        module: "daily_check_in",
-        function: "check_in",
-        args: [],
-        typeArgs: [],
-      });
 
       const success = await execute(txn, {
         showSuccessToast: false,

@@ -23,7 +23,6 @@ export const calculateVoteSystemState = (
   for (const task of VOTE_TASKS) {
     const isCompleted = votes >= task.requiredVotes;
     const taskId = 11000 + task.level; // Contract task ID
-    console.log("taskId", completedTaskIds);
     const isClaimed = completedTaskIds.includes(taskId);
 
     tasks.push({

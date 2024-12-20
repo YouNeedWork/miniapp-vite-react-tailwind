@@ -78,7 +78,6 @@ export const useShopPurchase = (onSuccess?: () => void) => {
           return true;
         }
 
-        console.log("result", result);
 
         const errorCode = result.output.status.abort_code;
         let errorMessage = "Purchase failed";
