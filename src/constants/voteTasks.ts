@@ -7,7 +7,7 @@ export const VOTE_TASKS = [
   {
     level: 1,
     requiredVotes: 100_000,
-    reward: 100_000_000 / 1e6,
+    reward: 1_000_000_000 / 1e6,
   },
   {
     level: 2,
