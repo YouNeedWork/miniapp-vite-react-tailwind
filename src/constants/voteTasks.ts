@@ -12,17 +12,17 @@ export const VOTE_TASKS = [
   {
     level: 2,
     requiredVotes: 10_000_000,
-    reward: 1_000_000_000 / 1e6,
+    reward: 10_000_000_000 / 1e6,
   },
   {
     level: 3,
     requiredVotes: 100_000_000,
-    reward: 10_000_000_000 / 1e6,
+    reward: 100_000_000_000 / 1e6,
   },
   {
     level: 4,
     requiredVotes: 1_000_000_000,
-    reward: 100_000_000_000 / 1e6,
+    reward: 1_000_000_000_000 / 1e6,
   },
   {
     level: 5,
