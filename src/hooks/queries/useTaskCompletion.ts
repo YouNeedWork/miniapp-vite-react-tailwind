@@ -20,12 +20,11 @@ export const useTaskCompletion = (taskId: number) => {
           address: PKG,
           module: "tasks",
           function: "is_task_completed",
-          args: [
-            Args.address(address),
-            Args.u64(BigInt(taskId)), // Add 11000 to get the correct contract task ID
-          ],
+          args: [Args.address(address), Args.u64(BigInt(taskId))],
           typeArgs: [],
         });
+
+        console.log("result", result);
 
         return !!result.return_values?.[0]?.decoded_value;
       } catch (error) {

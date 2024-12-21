@@ -18,6 +18,10 @@ export const TwitterTask: React.FC<TwitterTaskProps> = ({
   const { t } = useTranslation();
   const { data: isTwitterClaimed } = useTaskCompletion(10001);
 
+
+  console.log('isTwitterBound', isTwitterBound);
+  console.log('isTwitterClaimed', isTwitterClaimed);
+
   const task = {
     id: 'twitter',
     title: t('earn.tasks.twitter.title'),
@@ -26,7 +30,7 @@ export const TwitterTask: React.FC<TwitterTaskProps> = ({
     iconBgColor: TASK_COLORS.blue,
     reward: 10000,
     completed: isTwitterBound,
-    buttonText: isTwitterClaimed ? "" : t('common.buttons.claim'),
+    buttonText: isTwitterBound ? isTwitterClaimed ? "" : t('earn.buttons.claim') : t("earn.buttons.go"),
     onAction: onTwitterAction
   };
 
